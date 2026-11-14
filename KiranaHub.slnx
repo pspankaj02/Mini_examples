@@ -116,4 +116,19 @@
   <Folder Name="/46-GPU-Compute-And-MassiveParallel-Matrix/">
     <Project Path="46-GPU-Compute-And-MassiveParallel-Matrix/KiranaHub.GpuMatrixCompute.csproj" />
   </Folder>
+  <Folder Name="/47-Columnar-OLAP-Vectorized-QueryEngine/">
+    <Project Path="47-Columnar-OLAP-Vectorized-QueryEngine/KiranaHub.ColumnarOlap.csproj" />
+  </Folder>
+  <Folder Name="/48-Byzantine-Fault-Tolerant-Consensus-BFT/">
+    <Project Path="48-Byzantine-Fault-Tolerant-Consensus-BFT/KiranaHub.BftConsensus.csproj" />
+  </Folder>
+  <Folder Name="/49-ComplexEventProcessing-Stateful-StreamJoin/">
+    <Project Path="49-ComplexEventProcessing-Stateful-StreamJoin/KiranaHub.StreamingCep.csproj" />
+  </Folder>
+  <Folder Name="/50-Distributed-ObjectStorage-ErasureCoding/">
+    <Project Path="50-Distributed-ObjectStorage-ErasureCoding/KiranaHub.ObjectStorage.csproj" />
+  </Folder>
+  <Folder Name="/51-Programmable-KernelPacketFilter-eBPF/">
+    <Project Path="51-Programmable-KernelPacketFilter-eBPF/KiranaHub.PacketFilterEbpf.csproj" />
+  </Folder>
 </Solution>

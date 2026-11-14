@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- [KYA KARTA HAI]: Target framework .NET 10.0 define karta hai. -->
+    <!-- [KYU ZAROORI HAI]: High-performance low-level Span<byte>, unsafe memory, aur modern C# 13 features use karne ke liye. -->
+    <!-- [KAISE CHALTA HAI]: Roslyn compiler target build settings configure karta hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: Generates standalone .NET 10 executable. -->
+    <!-- [VARIATIONS TO TRY]: Enable AOT compilation via <PublishAot>true</PublishAot>. -->
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+</Project>

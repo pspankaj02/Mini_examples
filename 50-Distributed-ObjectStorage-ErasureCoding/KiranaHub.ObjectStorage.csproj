@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- [KYA KARTA HAI]: Target framework define karta hai (.NET 10.0 modern runtime). -->
+    <!-- [KYU ZAROORI HAI]: High-performance Span<T>, Memory<T>, aur zero-allocation low-level features use karne ke liye. -->
+    <!-- [KAISE CHALTA HAI]: Roslyn compiler C# 13 features aur .NET 10 core libraries link karta hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: Generates high-performance cross-platform binary. -->
+    <!-- [VARIATIONS TO TRY]: net9.0 par switch kar sakte hain agar older production env ho. -->
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+</Project>

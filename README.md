@@ -1,7 +1,7 @@
 # KiranaHub: Complete Full-Stack, Distributed & Cloud-Native Engineering Curriculum
 
 > **A Production-Grade Quick-Commerce (10-Minute Grocery Delivery) Learning Platform**  
-> Covering 90+ Core Technologies across 36 Standalone, Fully-Documented, and Automated Mini-Projects.
+> Covering 100+ Core Technologies across 51 Standalone, Fully-Documented, and Automated Mini-Projects.
 
 ---
 
@@ -80,7 +80,31 @@ flowchart TD
         P36["36-DistributedTracing-APM-And-OpenTelemetry"]
     end
 
-    L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> L7 --> L8
+    subgraph L9 ["Level 9: Low-Latency Matching, Consensus & Post-Quantum Cryptography"]
+        P37["37-LowLatency-LMAX-Disruptor-RingBuffer"]
+        P38["38-KernelBypass-ZeroCopy-RpcGateway"]
+        P39["39-WebAssembly-Wasm-Plugin-Sandbox"]
+        P40["40-DistributedConsensus-Raft-Protocol"]
+        P41["41-PostQuantum-Cryptography-ZeroTrust"]
+    end
+
+    subgraph L10 ["Level 10: Hardware SIMD, LSM Storage, zk-SNARKs & Swarms"]
+        P42["42-Hardware-Intrinsics-SIMD-AVX512"]
+        P43["43-StorageEngine-LogStructuredMerge-LSMTree"]
+        P44["44-ZeroKnowledge-Proofs-zkSNARKs-Privacy"]
+        P45["45-Autonomous-AI-MultiAgent-Swarm-Orchestrator"]
+        P46["46-GPU-Compute-And-MassiveParallel-Matrix"]
+    end
+
+    subgraph L11 ["Level 11: Hyper-Frontier Systems & Distributed Storage"]
+        P47["47-Columnar-OLAP-Vectorized-QueryEngine"]
+        P48["48-Byzantine-Fault-Tolerant-Consensus-BFT"]
+        P49["49-ComplexEventProcessing-Stateful-StreamJoin"]
+        P50["50-Distributed-ObjectStorage-ErasureCoding"]
+        P51["51-Programmable-KernelPacketFilter-eBPF"]
+    end
+
+    L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> L7 --> L8 --> L9 --> L10 --> L11
 ```
 
 ---
@@ -193,9 +217,20 @@ flowchart TD
 
 ---
 
+### **Level 11: Hyper-Frontier Systems & Distributed Storage**
+| # | Project Name | Key Topics Covered | Study Guide |
+|---|---|---|---|
+| **47** | [`47-Columnar-OLAP-Vectorized-QueryEngine`](file:///d:/ToLearn_Antigravity/47-Columnar-OLAP-Vectorized-QueryEngine) | Columnar storage chunking, SIMD vectorized filter/sum, Dictionary encoding, Run-Length Encoding (RLE), High-throughput Kirana order analytics | [README.md](file:///d:/ToLearn_Antigravity/47-Columnar-OLAP-Vectorized-QueryEngine/README.md) |
+| **48** | [`48-Byzantine-Fault-Tolerant-Consensus-BFT`](file:///d:/ToLearn_Antigravity/48-Byzantine-Fault-Tolerant-Consensus-BFT) | Practical Byzantine Fault Tolerance (PBFT), 3-phase commit (`PrePrepare`, `Prepare`, `Commit`), Cryptographic ECDSA signatures, Merkle Patricia Trie state | [README.md](file:///d:/ToLearn_Antigravity/48-Byzantine-Fault-Tolerant-Consensus-BFT/README.md) |
+| **49** | [`49-ComplexEventProcessing-Stateful-StreamJoin`](file:///d:/ToLearn_Antigravity/49-ComplexEventProcessing-Stateful-StreamJoin) | Out-of-order event streaming, Monotonic event-time watermarking, Time-sliding interval joins, Complex Event Processing (CEP) fraud & cart abandonment state machines | [README.md](file:///d:/ToLearn_Antigravity/49-ComplexEventProcessing-Stateful-StreamJoin/README.md) |
+| **50** | [`50-Distributed-ObjectStorage-ErasureCoding`](file:///d:/ToLearn_Antigravity/50-Distributed-ObjectStorage-ErasureCoding) | Systematic Reed-Solomon $4+2$ Cauchy erasure coding over $\text{GF}(2^8)$, Gaussian elimination matrix inversion, Content-Addressable Storage (CAS) SHA-256 dedup, Anti-entropy bit-rot scrubber | [README.md](file:///d:/ToLearn_Antigravity/50-Distributed-ObjectStorage-ErasureCoding/README.md) |
+| **51** | [`51-Programmable-KernelPacketFilter-eBPF`](file:///d:/ToLearn_Antigravity/51-Programmable-KernelPacketFilter-eBPF) | 64-bit eBPF Virtual Machine (R0-R10 registers), Static DAG safety verifier (loop prevention & bounds checks), Ingress XDP line-rate DDoS filtering, Zero-allocation packet processing | [README.md](file:///d:/ToLearn_Antigravity/51-Programmable-KernelPacketFilter-eBPF/README.md) |
+
+---
+
 ## 🚀 How to Build the Master Solution
 
-1. **Build all 39 .NET Projects (Levels 1 through 10)**:
+1. **Build all 44 .NET Projects (Levels 1 through 11)**:
    ```bash
    dotnet build KiranaHub.slnx --no-restore
    ```
@@ -231,5 +266,10 @@ flowchart TD
    - `44-ZkSnarks`: `dotnet run --project 44-ZeroKnowledge-Proofs-zkSNARKs-Privacy/KiranaHub.ZkSnarks.csproj`
    - `45-AgentSwarm`: `dotnet run --project 45-Autonomous-AI-MultiAgent-Swarm-Orchestrator/KiranaHub.AgentSwarm.csproj`
    - `46-GpuMatrixCompute`: `dotnet run --project 46-GPU-Compute-And-MassiveParallel-Matrix/KiranaHub.GpuMatrixCompute.csproj`
+   - `47-ColumnarOlap`: `dotnet run --project 47-Columnar-OLAP-Vectorized-QueryEngine/KiranaHub.ColumnarOlap.csproj`
+   - `48-BftConsensus`: `dotnet run --project 48-Byzantine-Fault-Tolerant-Consensus-BFT/KiranaHub.BftConsensus.csproj`
+   - `49-StreamingCep`: `dotnet run --project 49-ComplexEventProcessing-Stateful-StreamJoin/KiranaHub.StreamingCep.csproj`
+   - `50-ObjectStorage`: `dotnet run --project 50-Distributed-ObjectStorage-ErasureCoding/KiranaHub.ObjectStorage.csproj`
+   - `51-PacketFilterEbpf`: `dotnet run --project 51-Programmable-KernelPacketFilter-eBPF/KiranaHub.PacketFilterEbpf.csproj`
 
 
