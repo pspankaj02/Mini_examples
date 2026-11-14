@@ -1,0 +1,110 @@
+@inherits LayoutComponentBase
+@using KiranaHub.BlazorStore.Components
+@using KiranaHub.BlazorStore.Services
+@using MudBlazor
+
+@*
+    =========================================================================================
+    [TOPIC]: MudBlazor Root Layout & Theme Configuration
+    [PURPOSE]: Provides top AppBar, theme palette, dialog/snackbar providers, and cart drawer.
+    =========================================================================================
+*@
+
+@implements IDisposable
+@inject ICartStateService CartState
+
+@* [KYA KARTA HAI]: MudBlazor core providers: Theme, Dialog, and Toast Snackbar providers. *@
+<MudThemeProvider Theme="_kiranaTheme" IsDarkMode="_isDarkMode" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    @* --- TOP APP BAR --- *@
+    <MudAppBar Elevation="2" Color="Color.Primary" Dense="false">
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@(() => _drawerOpen = !_drawerOpen)" />
+        
+        <MudIcon Icon="@Icons.Material.Filled.ShoppingBag" Size="Size.Large" Class="mr-2" />
+        <MudText Typo="Typo.h5" Class="font-weight-bold">
+            Kirana<span style="color: #FCD34D;">Hub</span>
+        </MudText>
+        <MudChip T="string" Color="Color.Warning" Size="Size.Small" Class="ml-2 font-weight-bold">10-Min Delivery</MudChip>
+
+        <MudSpacer />
+
+        @* Theme Mode Toggle *@
+        <MudIconButton Icon="@(_isDarkMode ? Icons.Material.Filled.LightMode : Icons.Material.Filled.DarkMode)" 
+                       Color="Color.Inherit" 
+                       OnClick="@(() => _isDarkMode = !_isDarkMode)" 
+                       aria-label="Toggle Dark/Light Mode" />
+
+        @* Cart Trigger Badge *@
+        <MudBadge Content="@CartState.TotalItemCount" 
+                  Color="Color.Warning" 
+                  Overlap="true" 
+                  Visible="@(CartState.TotalItemCount > 0)" 
+                  Class="mx-2">
+            <MudIconButton Icon="@Icons.Material.Filled.ShoppingCart" 
+                           Color="Color.Inherit" 
+                           OnClick="@(() => _cartDrawerOpen = true)" 
+                           aria-label="Open Shopping Cart" />
+        </MudBadge>
+    </MudAppBar>
+
+    @* --- NAVIGATION DRAWER (LEFT SIDE) --- *@
+    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+        <NavMenu />
+    </MudDrawer>
+
+    @* --- MAIN CONTENT AREA --- *@
+    <MudMainContent Class="pa-4" Style="background-color: var(--mud-palette-background);">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge" Class="my-3">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+
+    @* --- SLIDING CART DRAWER (RIGHT SIDE) --- *@
+    <CartDrawer @bind-IsOpen="_cartDrawerOpen" />
+</MudLayout>
+
+@code {
+    private bool _drawerOpen = true;
+    private bool _cartDrawerOpen = false;
+    private bool _isDarkMode = false;
+
+    // [KYA KARTA HAI]: Custom Kirana Brand Theme Palette definition.
+    private readonly MudTheme _kiranaTheme = new()
+    {
+        PaletteLight = new PaletteLight
+        {
+            Primary = "#10B981",          // Emerald Green
+            Secondary = "#F59E0B",        // Warm Saffron
+            AppbarBackground = "#10B981",
+            Background = "#F9FAFB",
+            Surface = "#FFFFFF",
+            TextPrimary = "#1F2937",
+            Success = "#10B981",
+            Warning = "#F59E0B",
+            Error = "#EF4444"
+        },
+        PaletteDark = new PaletteDark
+        {
+            Primary = "#34D399",          // Light Emerald Green
+            Secondary = "#FBBF24",
+            AppbarBackground = "#064E3B",
+            Background = "#111827",
+            Surface = "#1F2937",
+            TextPrimary = "#F9FAFB",
+            Success = "#34D399"
+        }
+    };
+
+    protected override void OnInitialized()
+    {
+        CartState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        CartState.OnChange -= StateHasChanged;
+    }
+}

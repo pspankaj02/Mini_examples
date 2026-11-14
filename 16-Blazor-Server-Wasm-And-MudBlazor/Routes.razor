@@ -1,0 +1,23 @@
+@*
+    =========================================================================================
+    [TOPIC]: Blazor Routing Component (Routes.razor)
+    [PURPOSE]: Scans assembly for @page route attributes and resolves matching views.
+    =========================================================================================
+*@
+
+<Router AppAssembly="@typeof(Program).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(KiranaHub.BlazorStore.Layout.MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(KiranaHub.BlazorStore.Layout.MainLayout)">
+            <div class="text-center py-5">
+                <h3>Page Not Found</h3>
+                <p class="text-muted">The requested grocery store page does not exist.</p>
+                <a href="/" class="btn btn-primary">Return to Grocery Catalog</a>
+            </div>
+        </LayoutView>
+    </NotFound>
+</Router>
+

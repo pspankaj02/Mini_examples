@@ -1,0 +1,87 @@
+is_global = true
+build_property.MudDebugAnalyzer = 
+build_property.MudAllowedAttributePattern = 
+build_property.MudAllowedAttributeList = 
+build_property.TargetFramework = net10.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v10.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EntryPointFilePath = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = KiranaHub.BlazorStore
+build_property.RootNamespace = KiranaHub.BlazorStore
+build_property.ProjectDir = D:\ToLearn_Antigravity\16-Blazor-Server-Wasm-And-MudBlazor\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 10.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\ToLearn_Antigravity\16-Blazor-Server-Wasm-And-MudBlazor
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 10.0
+build_property.EnableCodeStyleSeverity = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Components/Architecture/KiranaThemeCascade.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcmNoaXRlY3R1cmVcS2lyYW5hVGhlbWVDYXNjYWRlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Components/Architecture/LifecycleInspector.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcmNoaXRlY3R1cmVcTGlmZWN5Y2xlSW5zcGVjdG9yLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Components/Architecture/QuantityCounter.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcmNoaXRlY3R1cmVcUXVhbnRpdHlDb3VudGVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Components/Architecture/TemplatedGroceryGrid.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcmNoaXRlY3R1cmVcVGVtcGxhdGVkR3JvY2VyeUdyaWQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Components/Architecture/ThemeChildConsumer.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcmNoaXRlY3R1cmVcVGhlbWVDaGlsZENvbnN1bWVyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Components/CartDrawer.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xDYXJ0RHJhd2VyLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Components/OrderConfirmationDialog.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xPcmRlckNvbmZpcm1hdGlvbkRpYWxvZy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Layout/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Layout/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Pages/CatalogPage.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2F0YWxvZ1BhZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Pages/ComponentArchitecture.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ29tcG9uZW50QXJjaGl0ZWN0dXJlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Pages/RiderTrackingPage.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmlkZXJUcmFja2luZ1BhZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/Routes.razor]
+build_metadata.AdditionalFiles.TargetPath = Um91dGVzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/ToLearn_Antigravity/16-Blazor-Server-Wasm-And-MudBlazor/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 

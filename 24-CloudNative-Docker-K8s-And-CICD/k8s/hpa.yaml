@@ -1,0 +1,130 @@
+# ==============================================================================================
+# KiranaHub Cloud-Native: Horizontal Pod Autoscaler (HPA) for Flash-Sale Traffic Surges
+# [KYA KARTA HAI] Real-time CPU aur Memory utilization ke hisaab se Web API pods ko dynamically 2 se 10 scale karta hai.
+# [KYU ZAROORI HAI] Flash sales (e.g. 7 PM dinner rush) me traffic 10x badhne par service crash hone se rokhna aur quiet hours me cloud cost bachana.
+# [KAISE CHALTA HAI] K8s Metrics Server se pod CPU/Memory metrics query karke mathematical formula se desired replicas calculate karta hai.
+# [OUTPUT / SIDE EFFECT] Elastic auto-scaling without human intervention.
+# [VARIATIONS TO TRY] KEDA (Kubernetes Event-driven Autoscaling) scaling based on RabbitMQ queue depth.
+# ==============================================================================================
+
+# [KYA KARTA HAI] Autoscaling API version specify karta hai.
+# [KYU ZAROORI HAI] Modern autoscaling/v2 API multi-metric scaling (CPU + Memory + Custom) support karta hai.
+# [KAISE CHALTA HAI] API server validates HPA spec against autoscaling/v2.
+# [OUTPUT / SIDE EFFECT] Autoscaling v2 schema loaded.
+# [VARIATIONS TO TRY] autoscaling/v1 (legacy, CPU only).
+apiVersion: autoscaling/v2
+
+# [KYA KARTA HAI] Resource kind HorizontalPodAutoscaler declare karta hai.
+# [KYU ZAROORI HAI] K8s HPA controller ko bind karne ke liye.
+# [KAISE CHALTA HAI] HPA controller reconcile loop executes every 15 seconds.
+# [OUTPUT / SIDE EFFECT] HPA controller monitoring active.
+# [VARIATIONS TO TRY] VerticalPodAutoscaler (VPA) for resizing pod memory/CPU without adding pods.
+kind: HorizontalPodAutoscaler
+
+# [KYA KARTA HAI] Metadata block for HPA.
+# [KYU ZAROORI HAI] Identifier name aur namespace mapping ke liye.
+# [KAISE CHALTA HAI] Registered in namespace etcd registry.
+# [OUTPUT / SIDE EFFECT] HPA metadata initialized.
+# [VARIATIONS TO TRY] Labels for monitoring dashboards.
+metadata:
+  # [KYA KARTA HAI] HPA unique name declare karta hai.
+  # [KYU ZAROORI HAI] `kubectl get hpa kiranahub-api-hpa` se scaling status check karne ke liye.
+  # [KAISE CHALTA HAI] Unique name indexed.
+  # [OUTPUT / SIDE EFFECT] Name set to kiranahub-api-hpa.
+  # [VARIATIONS TO TRY] Custom name.
+  name: kiranahub-api-hpa
+  # [KYA KARTA HAI] Namespace scope set karta hai.
+  # [KYU ZAROORI HAI] Target deployment ke same namespace me hona zaroori hai.
+  # [KAISE CHALTA HAI] Scoped to kiranahub namespace.
+  # [OUTPUT / SIDE EFFECT] Namespace mapped.
+  # [VARIATIONS TO TRY] Default namespace.
+  namespace: kiranahub
+
+# [KYA KARTA HAI] HPA specification block.
+# [KYU ZAROORI HAI] Scale target, minimum/maximum pod limits, aur metric thresholds define karna.
+# [KAISE CHALTA HAI] Calculates: desiredReplicas = ceil[currentReplicas * ( currentMetricValue / desiredMetricValue )].
+# [OUTPUT / SIDE EFFECT] Dynamic replica management.
+# [VARIATIONS TO TRY] Custom cooldown stabilization windows.
+spec:
+  # [KYA KARTA HAI] Scaling target reference declare karta hai.
+  # [KYU ZAROORI HAI] HPA ko batata hai ki kis Deployment object ke replicas modify karne hain.
+  # [KAISE CHALTA HAI] Binds to Deployment `kiranahub-api`.
+  # [OUTPUT / SIDE EFFECT] Target binding established.
+  # [VARIATIONS TO TRY] Scale ReplicaSet or StatefulSet directly.
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: kiranahub-api
+
+  # [KYA KARTA HAI] Minimum pod count floor set karta hai.
+  # [KYU ZAROORI HAI] Traffic zero hone par bhi minimum 2 pods rahenge zero-downtime redundancy ke liye.
+  # [KAISE CHALTA HAI] HPA will never scale below this number.
+  # [OUTPUT / SIDE EFFECT] Minimum 2 pods guaranteed.
+  # [VARIATIONS TO TRY] 3 for multi-zone clusters.
+  minReplicas: 2
+
+  # [KYA KARTA HAI] Maximum pod count ceiling set karta hai.
+  # [KYU ZAROORI HAI] Extreme traffic spikes ya DDoS attack me cloud infrastructure bill explode hone se rokna.
+  # [KAISE CHALTA HAI] HPA will cap maximum pods at 10.
+  # [OUTPUT / SIDE EFFECT] Hard ceiling of 10 pods.
+  # [VARIATIONS TO TRY] 50 for large production clusters.
+  maxReplicas: 10
+
+  # [KYA KARTA HAI] Metrics array define karta hai jiske basis par scaling triggers evaluate honge.
+  # [KYU ZAROORI HAI] Multi-dimensional scaling — chahe CPU bhare ya Memory bhare, pods automatically scale honge.
+  # [KAISE CHALTA HAI] Queries metrics-server at regular intervals.
+  # [OUTPUT / SIDE EFFECT] Multi-metric evaluation active.
+  # [VARIATIONS TO TRY] Custom Prometheus metrics (e.g. HTTP Requests Per Second).
+  metrics:
+    # [KYA KARTA HAI] CPU utilization metric threshold define karta hai.
+    # [KYU ZAROORI HAI] CPU bound tasks (JSON parsing, cryptography) ke time scale out trigger karna.
+    # [KAISE CHALTA HAI] Compares average CPU against pod resource requests.
+    # [OUTPUT / SIDE EFFECT] Scales up when average CPU exceeds 75%.
+    # [VARIATIONS TO TRY] 60% for proactive burst scaling.
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 75
+
+    # [KYA KARTA HAI] Memory utilization metric threshold define karta hai.
+    # [KYU ZAROORI HAI] Heavy caching aur large batch payload processing me OOM crash rokna.
+    # [KAISE CHALTA HAI] Compares pod memory RSS against container limit.
+    # [OUTPUT / SIDE EFFECT] Scales up when average Memory exceeds 80%.
+    # [VARIATIONS TO TRY] 70% threshold.
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+
+  # [KYA KARTA HAI] Behavior stabilization policy block define karta hai.
+  # [KYU ZAROORI HAI] Flapping prevention (scale up fast, scale down cautiously).
+  # [KAISE CHALTA HAI] Enforces cooldown timers before terminating pods.
+  # [OUTPUT / SIDE EFFECT] Smooth, stable scaling transitions.
+  # [VARIATIONS TO TRY] Aggressive scale up during promotions.
+  behavior:
+    # [KYA KARTA HAI] Scale up rules configure karta hai.
+    # [KYU ZAROORI HAI] Traffic badhte hi turant pods add karna bina delay ke.
+    # [KAISE CHALTA HAI] 0 second stabilization window allows immediate scale-up.
+    # [OUTPUT / SIDE EFFECT] Instant burst scaling.
+    # [VARIATIONS TO TRY] Rate limit scale-up to 100% per minute.
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Percent
+          value: 100
+          periodSeconds: 15
+    # [KYA KARTA HAI] Scale down rules configure karta hai.
+    # [KYU ZAROORI HAI] Traffic kam hote hi pods turant delete na ho jayein agar fir se chhota burst aaye (Thrashing prevention).
+    # [KAISE CHALTA HAI] Waits 300 seconds (5 minutes) of sustained low traffic before terminating extra pods.
+    # [OUTPUT / SIDE EFFECT] Conservative, safe scale-down.
+    # [VARIATIONS TO TRY] 120 seconds in staging environments.
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+        - type: Percent
+          value: 50
+          periodSeconds: 60

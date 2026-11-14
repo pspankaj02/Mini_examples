@@ -1,0 +1,12 @@
+{
+  "name": "kiranahub-cloud-native",
+  "version": "1.0.0",
+  "description": "KiranaHub Cloud-Native Docker, Kubernetes & CI/CD Verification Harness",
+  "main": "dist/test/verifier.js",
+  "type": "module",
+  "scripts": {
+    "test": "node test/verifier.mjs"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

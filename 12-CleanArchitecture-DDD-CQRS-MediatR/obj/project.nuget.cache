@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "inyAVbFc0tI=",
+  "success": true,
+  "projectFilePath": "D:\\ToLearn_Antigravity\\12-CleanArchitecture-DDD-CQRS-MediatR\\KiranaHub.CleanArchitecture.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\panka\\.nuget\\packages\\mediatr\\12.4.1\\mediatr.12.4.1.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\microsoft.extensions.configuration\\9.0.2\\microsoft.extensions.configuration.9.0.2.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.2\\microsoft.extensions.configuration.abstractions.9.0.2.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\microsoft.extensions.configuration.binder\\9.0.2\\microsoft.extensions.configuration.binder.9.0.2.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\9.0.2\\microsoft.extensions.dependencyinjection.9.0.2.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\9.0.2\\microsoft.extensions.dependencyinjection.abstractions.9.0.2.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\microsoft.extensions.logging\\9.0.2\\microsoft.extensions.logging.9.0.2.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\9.0.2\\microsoft.extensions.logging.abstractions.9.0.2.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\microsoft.extensions.logging.configuration\\9.0.2\\microsoft.extensions.logging.configuration.9.0.2.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\microsoft.extensions.logging.console\\9.0.2\\microsoft.extensions.logging.console.9.0.2.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\microsoft.extensions.options\\9.0.2\\microsoft.extensions.options.9.0.2.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\microsoft.extensions.options.configurationextensions\\9.0.2\\microsoft.extensions.options.configurationextensions.9.0.2.nupkg.sha512",
+    "C:\\Users\\panka\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.2\\microsoft.extensions.primitives.9.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

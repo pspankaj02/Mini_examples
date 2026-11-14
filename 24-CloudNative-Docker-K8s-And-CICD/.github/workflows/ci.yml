@@ -1,0 +1,212 @@
+# ==============================================================================================
+# KiranaHub Cloud-Native: Production CI/CD Pipeline (GitHub Actions)
+# [KYA KARTA HAI] Har commit aur PR par automated compile, unit tests, Docker multi-stage builds, aur security scan run karta hai.
+# [KYU ZAROORI HAI] Broken code, failing tests, ya security vulnerabilities production branch me merge hone se rokna.
+# [KAISE CHALTA HAI] GitHub Actions runners par isolated Ubuntu VMs spawn karke pipeline steps sequentially/in parallel execute karta hai.
+# [OUTPUT / SIDE EFFECT] Validated pull requests aur deployment-ready scanned container images.
+# [VARIATIONS TO TRY] Automated GitOps CD deployment via ArgoCD webhook.
+# ==============================================================================================
+
+# [KYA KARTA HAI] GitHub Actions workflow ka display name assign karta hai.
+# [KYU ZAROORI HAI] GitHub repository ke "Actions" tab me visual identification ke liye.
+# [KAISE CHALTA HAI] Rendered in GitHub web UI.
+# [OUTPUT / SIDE EFFECT] Workflow named "KiranaHub Continuous Integration".
+# [VARIATIONS TO TRY] Environment specific names like "CI - Staging".
+name: KiranaHub Continuous Integration
+
+# [KYA KARTA HAI] Workflow execution triggers define karta hai.
+# [KYU ZAROORI HAI] Batata hai ki pipeline kab automatically trigger hogi.
+# [KAISE CHALTA HAI] GitHub webhooks listen for Git push and pull request events.
+# [OUTPUT / SIDE EFFECT] Triggers pipeline on matching events.
+# [VARIATIONS TO TRY] Cron schedule for nightly vulnerability scans.
+on:
+  # [KYA KARTA HAI] Main branch par direct code push hone par trigger karta hai.
+  # [KYU ZAROORI HAI] Production baseline validation ensure karne ke liye.
+  # [KAISE CHALTA HAI] Triggers on git push to main.
+  # [OUTPUT / SIDE EFFECT] Post-merge verification triggered.
+  # [VARIATIONS TO TRY] Specific branch wildcard pattern `releases/**`.
+  push:
+    branches: [ main ]
+  # [KYA KARTA HAI] Pull request open ya synchronize hone par trigger karta hai.
+  # [KYU ZAROORI HAI] Code review ke time hi test results dikhana before merging.
+  # [KAISE CHALTA HAI] Triggers on PR targeting main branch.
+  # [OUTPUT / SIDE EFFECT] Pre-merge branch protection active.
+  # [VARIATIONS TO TRY] Filter on specific file path changes.
+  pull_request:
+    branches: [ main ]
+
+# [KYA KARTA HAI] Concurrent execution cancellation configure karta hai.
+# [KYU ZAROORI HAI] Naya commit aane par purani running pipeline ko cancel karke runner minutes aur billing bachana.
+# [KAISE CHALTA HAI] Evaluates concurrency group name and cancels in-progress jobs.
+# [OUTPUT / SIDE EFFECT] Superseded builds auto-aborted.
+# [VARIATIONS TO TRY] Allow concurrent builds on release tags.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# [KYA KARTA HAI] Pipeline ke execution jobs block initialize karta hai.
+# [KYU ZAROORI HAI] Independent ya dependent stages (test, build, scan) define karna.
+# [KAISE CHALTA HAI] GitHub orchestrator assigns jobs to runner pools.
+# [OUTPUT / SIDE EFFECT] Job graph scheduled.
+# [VARIATIONS TO TRY] Matrix strategies for multi-OS testing.
+jobs:
+
+  # [KYA KARTA HAI] Backend .NET test and compilation job.
+  # [KYU ZAROORI HAI] C# microservices, DDD logic, aur unit tests verify karna.
+  # [KAISE CHALTA HAI] Runs in clean Ubuntu runner VM.
+  # [OUTPUT / SIDE EFFECT] Verified .NET binaries.
+  # [VARIATIONS TO TRY] Run on Windows runner for desktop targets.
+  build-and-test-dotnet:
+    # [KYA KARTA HAI] Runner OS environment specify karta hai.
+    # [KYU ZAROORI HAI] Fast, cost-effective Linux virtualization environment.
+    # [KAISE CHALTA HAI] Spins up ubuntu-latest container VM.
+    # [OUTPUT / SIDE EFFECT] Linux runner active.
+    # [VARIATIONS TO TRY] Self-hosted runner for private VPC access.
+    runs-on: ubuntu-latest
+
+    # [KYA KARTA HAI] Execution steps list define karta hai.
+    # [KYU ZAROORI HAI] Sequential commands execute karna.
+    # [KAISE CHALTA HAI] Steps execute in order within workspace.
+    # [OUTPUT / SIDE EFFECT] Step progression.
+    # [VARIATIONS TO TRY] Composite actions.
+    steps:
+      # [KYA KARTA HAI] Source code repository checkout karta hai runner VM par.
+      # [KYU ZAROORI HAI] Git files ke bina koi build ya test execute nahi ho sakta.
+      # [KAISE CHALTA HAI] Runs `git clone` using GitHub token.
+      # [OUTPUT / SIDE EFFECT] Code cloned to `$GITHUB_WORKSPACE`.
+      # [VARIATIONS TO TRY] `fetch-depth: 0` for GitVersion semantic tagging.
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # [KYA KARTA HAI] .NET 10 SDK environment setup karta hai runner par.
+      # [KYU ZAROORI HAI] dotnet CLI, Roslyn compiler, aur test runner availability ensure karna.
+      # [KAISE CHALTA HAI] Downloads and caches .NET 10 runtime binaries.
+      # [OUTPUT / SIDE EFFECT] dotnet CLI available on PATH.
+      # [VARIATIONS TO TRY] Global.json pinning for exact patch level.
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      # [KYA KARTA HAI] NuGet package dependencies restore karta hai.
+      # [KYU ZAROORI HAI] Third-party libraries (MediatR, StackExchange.Redis, MassTransit) download karna.
+      # [KAISE CHALTA HAI] Executes `dotnet restore` across projects.
+      # [OUTPUT / SIDE EFFECT] Packages resolved and cached.
+      # [VARIATIONS TO TRY] Enable NuGet cache action for 3x faster restore.
+      - name: Restore Dependencies
+        run: dotnet restore KiranaHub.slnx
+
+      # [KYA KARTA HAI] Entire KiranaHub solution compile karta hai.
+      # [KYU ZAROORI HAI] Type errors, syntax issues, aur compiler warnings detect karna.
+      # [KAISE CHALTA HAI] Executes `dotnet build` with no-restore flag.
+      # [OUTPUT / SIDE EFFECT] Binaries compiled successfully.
+      # [VARIATIONS TO TRY] TreatWarningsAsErrors flag in CI.
+      - name: Build Solution
+        run: dotnet build KiranaHub.slnx --no-restore --configuration Release
+
+      # [KYA KARTA HAI] Automated xUnit unit tests execute karta hai.
+      # [KYU ZAROORI HAI] Domain business rules, money value objects, aur calculation logic verify karna.
+      # [KAISE CHALTA HAI] Runs xUnit runner and logs test results.
+      # [OUTPUT / SIDE EFFECT] All tests must pass, otherwise PR is blocked.
+      # [VARIATIONS TO TRY] Collect code coverage with Coverlet.
+      - name: Run Unit Tests
+        run: dotnet test 07-Unit-Testing-And-Mocking/KiranaHub.UnitTests.csproj --no-build --configuration Release --verbosity normal
+
+  # [KYA KARTA HAI] Frontend TypeScript and React build verification job.
+  # [KYU ZAROORI HAI] Frontend syntax, type checks, aur production bundle integrity verify karna.
+  # [KAISE CHALTA HAI] Node runner installs packages and runs test/build commands.
+  # [OUTPUT / SIDE EFFECT] Verified frontend distribution assets.
+  # [VARIATIONS TO TRY] Storybook visual regression testing.
+  build-and-test-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # [KYA KARTA HAI] Node.js 22 LTS environment setup karta hai.
+      # [KYU ZAROORI HAI] Modern ECMAScript features aur npm package manager provide karna.
+      # [KAISE CHALTA HAI] Configures Node.js 22 on runner path.
+      # [OUTPUT / SIDE EFFECT] Node and npm ready.
+      # [VARIATIONS TO TRY] Node 20 LTS for conservative stability.
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: '18-React-Web-Connecting-To-WebAPI/package-lock.json'
+
+      # [KYA KARTA HAI] Strict clean npm dependencies install karta hai.
+      # [KYU ZAROORI HAI] Deterministic package installation without modifying package-lock.json.
+      # [KAISE CHALTA HAI] Runs `npm ci` in frontend folder.
+      # [OUTPUT / SIDE EFFECT] node_modules loaded.
+      # [VARIATIONS TO TRY] Pnpm for disk-efficient caching.
+      - name: Install Frontend Dependencies
+        working-directory: 18-React-Web-Connecting-To-WebAPI
+        run: npm ci
+
+      # [KYA KARTA HAI] Frontend unit tests execute karta hai.
+      # [KYU ZAROORI HAI] Shopping cart calculation aur UI hook logic verify karna.
+      # [KAISE CHALTA HAI] Executes Vitest / Jest test runner.
+      # [OUTPUT / SIDE EFFECT] Frontend tests pass.
+      # [VARIATIONS TO TRY] Run tests with `--coverage` flag.
+      - name: Run Frontend Tests
+        working-directory: 18-React-Web-Connecting-To-WebAPI
+        run: npm test
+
+      # [KYA KARTA HAI] Production Vite/Next build bundle generate karta hai.
+      # [KYU ZAROORI HAI] Confirm karta hai ki TypeScript types aur minification production-ready hain.
+      # [KAISE CHALTA HAI] Compiles static assets to `dist/`.
+      # [OUTPUT / SIDE EFFECT] Zero syntax or type errors in frontend.
+      # [VARIATIONS TO TRY] Bundle analyzer plugin to catch heavy imports.
+      - name: Build Frontend Bundle
+        working-directory: 18-React-Web-Connecting-To-WebAPI
+        run: npm run build
+
+  # [KYA KARTA HAI] Docker container build and Trivy vulnerability scan job.
+  # [KYU ZAROORI HAI] Confirm karna ki Dockerfiles successfully build hoti hain aur image me high-severity CVEs nahi hain.
+  # [KAISE CHALTA HAI] Runs after dotnet and frontend tests pass (`needs: [...]`).
+  # [OUTPUT / SIDE EFFECT] Secure, verified Docker container images.
+  # [VARIATIONS TO TRY] Push to Amazon ECR or GitHub Packages Container Registry (GHCR).
+  docker-build-and-security-scan:
+    # [KYA KARTA HAI] Pipeline dependency declare karta hai.
+    # [KYU ZAROORI HAI] Pehle unit tests pass honge tabhi Docker image build hogi (Resource saving).
+    # [KAISE CHALTA HAI] Waits for both previous jobs to succeed.
+    # [OUTPUT / SIDE EFFECT] Gated execution.
+    # [VARIATIONS TO TRY] Independent build if fast feedback is desired.
+    needs: [build-and-test-dotnet, build-and-test-frontend]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # [KYA KARTA HAI] Docker Buildx CLI plugin setup karta hai.
+      # [KYU ZAROORI HAI] Advanced multi-stage caching aur multi-platform (linux/amd64, linux/arm64) builds ke liye.
+      # [KAISE CHALTA HAI] Initializes BuildKit builder instance.
+      # [OUTPUT / SIDE EFFECT] BuildKit enabled.
+      # [VARIATIONS TO TRY] Remote cache export to GitHub cache.
+      - name: Set up Docker Buildx
+        uses: actions/setup-buildx-action@v3
+
+      # [KYA KARTA HAI] Web API Docker image build karta hai.
+      # [KYU ZAROORI HAI] Multi-stage build process verify karna bina container registry me push kiye.
+      # [KAISE CHALTA HAI] Executes `docker build -f Dockerfile.api`.
+      # [OUTPUT / SIDE EFFECT] Local Docker image `kiranahub-api:ci` ready.
+      # [VARIATIONS TO TRY] Tag with Git SHA.
+      - name: Build Web API Docker Image
+        run: |
+          docker build \
+            -f 24-CloudNative-Docker-K8s-And-CICD/Dockerfile.api \
+            -t kiranahub-api:ci .
+
+      # [KYA KARTA HAI] Trivy security scanner run karta hai container image par.
+      # [KYU ZAROORI HAI] Known CVE vulnerabilities (CRITICAL/HIGH) scan karke insecure images ko deploy hone se rokna.
+      # [KAISE CHALTA HAI] Aqua Security Trivy scans OS packages and NuGet libraries against vulnerability databases.
+      # [OUTPUT / SIDE EFFECT] Vulnerability scan report generated.
+      # [VARIATIONS TO TRY] Fail build if severity is CRITICAL: `exit-code: 1`.
+      - name: Scan Image for Vulnerabilities (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'kiranahub-api:ci'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '0'

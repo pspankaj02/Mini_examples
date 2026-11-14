@@ -1,0 +1,116 @@
+# ==============================================================================================
+# KiranaHub Cloud-Native: Kubernetes Ingress Controller with TLS & Path-Based Routing
+# [KYA KARTA HAI] Public HTTP/HTTPS traffic ko inspect karke path-based routing se API aur Storefront pods me forward karta hai.
+# [KYU ZAROORI HAI] Single public IP aur single domain se pure microservices system ko serve karna with SSL termination.
+# [KAISE CHALTA HAI] Ingress Controller (Nginx/Traefik) DNS request receive karke HTTP Path match karta hai.
+# [OUTPUT / SIDE EFFECT] https://kiranahub.com routes seamlessly to frontend and backend services.
+# [VARIATIONS TO TRY] Rate limiting annotations, CORS headers, and Let's Encrypt cert-manager automation.
+# ==============================================================================================
+
+# [KYA KARTA HAI] Networking API version specify karta hai.
+# [KYU ZAROORI HAI] Ingress standard schema v1 specify karna.
+# [KAISE CHALTA HAI] K8s API server validates Ingress resource.
+# [OUTPUT / SIDE EFFECT] Ingress schema validated.
+# [VARIATIONS TO TRY] Gateway API (v1beta1) for advanced mesh routing.
+apiVersion: networking.k8s.io/v1
+
+# [KYA KARTA HAI] Resource kind Ingress declare karta hai.
+# [KYU ZAROORI HAI] Layer 7 reverse proxy routing rules configure karne ke liye.
+# [KAISE CHALTA HAI] IngressController reconciles configuration into Nginx/Envoy conf.
+# [OUTPUT / SIDE EFFECT] Layer 7 ingress object registered.
+# [VARIATIONS TO TRY] Contour HTTPProxy or Istio VirtualService.
+kind: Ingress
+
+# [KYA KARTA HAI] Metadata block with routing annotations.
+# [KYU ZAROORI HAI] Controller behavior, rewrite targets, and SSL behavior customize karna.
+# [KAISE CHALTA HAI] Annotations are parsed by ingress controller daemon.
+# [OUTPUT / SIDE EFFECT] Controller properties loaded.
+# [VARIATIONS TO TRY] Add cert-manager annotations for auto-renewing SSL certificates.
+metadata:
+  # [KYA KARTA HAI] Ingress resource name assign karta hai.
+  # [KYU ZAROORI HAI] CLI management ke liye.
+  # [KAISE CHALTA HAI] Indexed in namespace.
+  # [OUTPUT / SIDE EFFECT] Name set to kiranahub-ingress.
+  # [VARIATIONS TO TRY] Environment prefix `prod-ingress`.
+  name: kiranahub-ingress
+  # [KYA KARTA HAI] Namespace scope set karta hai.
+  # [KYU ZAROORI HAI] Scopes ingress to the kiranahub namespace.
+  # [KAISE CHALTA HAI] References services in the same namespace.
+  # [OUTPUT / SIDE EFFECT] Namespace set to kiranahub.
+  # [VARIATIONS TO TRY] Default namespace.
+  namespace: kiranahub
+  # [KYA KARTA HAI] Nginx Ingress Controller specific annotations configure karta hai.
+  # [KYU ZAROORI HAI] HTTPS redirect, buffer sizes, and timeout settings tune karne ke liye.
+  # [KAISE CHALTA HAI] Nginx reloads its generated nginx.conf with these parameters.
+  # [OUTPUT / SIDE EFFECT] Optimized reverse proxy behavior.
+  # [VARIATIONS TO TRY] Add `nginx.ingress.kubernetes.io/limit-rps: "50"` for DDoS defense.
+  annotations:
+    # [KYA KARTA HAI] Ingress class specify karta hai.
+    # [KYU ZAROORI HAI] Batata hai ki Nginx controller is ingress ko manage karega.
+    # [KAISE CHALTA HAI] Nginx ingress controller claims the resource.
+    # [OUTPUT / SIDE EFFECT] Handled by Nginx.
+    # [VARIATIONS TO TRY] Traefik, HAProxy, or AWS ALB ingress class.
+    kubernetes.io/ingress.class: "nginx"
+    # [KYA KARTA HAI] Automatic HTTP to HTTPS redirection force karta hai.
+    # [KYU ZAROORI HAI] Man-in-the-middle attacks prevent karne ke liye all traffic must be encrypted.
+    # [KAISE CHALTA HAI] Sends HTTP 308 permanent redirect on insecure port 80.
+    # [OUTPUT / SIDE EFFECT] Forced HTTPS encryption.
+    # [VARIATIONS TO TRY] False in local dev minikube environments.
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    # [KYA KARTA HAI] Proxy connection and read timeouts configure karta hai.
+    # [KYU ZAROORI HAI] Long-running SignalR WebSocket connections drop hone se rokhna.
+    # [KAISE CHALTA HAI] Sets nginx proxy_read_timeout to 3600 seconds.
+    # [OUTPUT / SIDE EFFECT] Stable long-polling / WebSocket connections.
+    # [VARIATIONS TO TRY] 60s for pure REST APIs.
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+
+# [KYA KARTA HAI] Ingress specification block.
+# [KYU ZAROORI HAI] Domain names, TLS certificates, aur path forwarding rules define karna.
+# [KAISE CHALTA HAI] Ingress controller updates routing table.
+# [OUTPUT / SIDE EFFECT] Routing logic active.
+# [VARIATIONS TO TRY] Default backend for unhandled domains.
+spec:
+  # [KYA KARTA HAI] TLS termination configuration block.
+  # [KYU ZAROORI HAI] Public HTTPS certificate serve karke edge par decrypt karna.
+  # [KAISE CHALTA HAI] Loads secret containing TLS cert and private key.
+  # [OUTPUT / SIDE EFFECT] Encrypted HTTPS listener active on port 443.
+  # [VARIATIONS TO TRY] Wildcard certificates `*.kiranahub.com`.
+  tls:
+    - hosts:
+        - kiranahub.com
+      secretName: kiranahub-tls-secret
+
+  # [KYA KARTA HAI] Host and path routing rules array.
+  # [KYU ZAROORI HAI] Multi-domain aur multi-path routing policies define karna.
+  # [KAISE CHALTA HAI] Evaluates request Host header and URL Path.
+  # [OUTPUT / SIDE EFFECT] Traffic routed to target backend service.
+  # [VARIATIONS TO TRY] Separate API subdomain `api.kiranahub.com`.
+  rules:
+    - host: kiranahub.com
+      http:
+        paths:
+          # [KYA KARTA HAI] API requests path routing rule.
+          # [KYU ZAROORI HAI] Saare `/api/*` requests ko backend Web API microservice par route karna.
+          # [KAISE CHALTA HAI] Prefix match on `/api` forwards to kiranahub-api-svc:80.
+          # [OUTPUT / SIDE EFFECT] API traffic routed to .NET backend.
+          # [VARIATIONS TO TRY] Exact path match instead of Prefix.
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: kiranahub-api-svc
+                port:
+                  number: 80
+
+          # [KYA KARTA HAI] Storefront frontend requests path routing rule.
+          # [KYU ZAROORI HAI] Saari general web requests (`/`, `/catalog`, `/cart`) Storefront UI pods ko bhejna.
+          # [KAISE CHALTA HAI] Fallback prefix `/` forwards to kiranahub-web-svc:80.
+          # [OUTPUT / SIDE EFFECT] Customer sees React/Next.js UI.
+          # [VARIATIONS TO TRY] Route static assets directly to CDN storage bucket.
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kiranahub-web-svc
+                port:
+                  number: 80

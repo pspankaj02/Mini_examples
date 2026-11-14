@@ -1,0 +1,92 @@
+<!-- [KYA KARTA HAI]: HTML5 Doctype declaration -->
+<!-- [KYU ZAROORI HAI]: Browser ko modern standard rendering mode me force karne ke liye -->
+<!-- [KAISE CHALTA HAI]: Standard W3C doctype tag -->
+<!-- [OUTPUT / SIDE EFFECT]: Standards mode active -->
+<!-- [VARIATIONS TO TRY]: N/A -->
+<!DOCTYPE html>
+<!-- [KYA KARTA HAI]: Root HTML element with English language attribute -->
+<!-- [KYU ZAROORI HAI]: Accessibility aur screen readers ke liye -->
+<!-- [KAISE CHALTA HAI]: lang="en" attribute specify karta hai -->
+<!-- [OUTPUT / SIDE EFFECT]: Root document container -->
+<!-- [VARIATIONS TO TRY]: lang="hi" for Hindi localization -->
+<html lang="en">
+  <!-- [KYA KARTA HAI]: Document head containing metadata and stylesheets -->
+  <!-- [KYU ZAROORI HAI]: Browser viewport, title, aur assets load karne ke liye -->
+  <!-- [KAISE CHALTA HAI]: Head tag container -->
+  <!-- [OUTPUT / SIDE EFFECT]: Head metadata section -->
+  <!-- [VARIATIONS TO TRY]: Preconnect links for fonts -->
+  <head>
+    <!-- [KYA KARTA HAI]: UTF-8 character encoding set karta hai -->
+    <!-- [KYU ZAROORI HAI]: Hindi text, symbols aur emojis ko render karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: Charset meta tag specify karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: UTF-8 encoding enabled -->
+    <!-- [VARIATIONS TO TRY]: ISO-8859-1 (legacy) -->
+    <meta charset="UTF-8" />
+    <!-- [KYA KARTA HAI]: Responsive mobile viewport configure karta hai -->
+    <!-- [KYU ZAROORI HAI]: Mobile screens par zoom scaling aur responsive layout sahi dikhane ke liye -->
+    <!-- [KAISE CHALTA HAI]: width=device-width aur initial-scale=1.0 set karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Responsive viewport scaling -->
+    <!-- [VARIATIONS TO TRY]: user-scalable=no for strict app-like feel -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- [KYA KARTA HAI]: Page title define karta hai jo browser tab me dikhta hai -->
+    <!-- [KYU ZAROORI HAI]: Brand identity aur user recognition ke liye -->
+    <!-- [KAISE CHALTA HAI]: Title tag string evaluate hota hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Tab header title -->
+    <!-- [VARIATIONS TO TRY]: Dynamic title updates via document.title -->
+    <title>KiranaHub - Instant Grocery Delivery</title>
+    <!-- [KYA KARTA HAI]: Google Fonts se modern Inter font import karta hai -->
+    <!-- [KYU ZAROORI HAI]: Clean typography provide karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: External stylesheet link -->
+    <!-- [OUTPUT / SIDE EFFECT]: Modern font family loaded -->
+    <!-- [VARIATIONS TO TRY]: Self-hosted local webfonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+    <!-- [KYA KARTA HAI]: Inline base styling reset aur design tokens define karta hai -->
+    <!-- [KYU ZAROORI HAI]: Consistent look across all browsers without external heavy CSS framework -->
+    <!-- [KAISE CHALTA HAI]: CSS variables aur layout rules apply karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Base styles applied -->
+    <!-- [VARIATIONS TO TRY]: Tailwind CSS / CSS Modules -->
+    <style>
+      :root {
+        --primary: #059669;
+        --primary-dark: #047857;
+        --accent: #f59e0b;
+        --bg-gray: #f9fafb;
+        --card-bg: #ffffff;
+        --text-dark: #111827;
+        --text-muted: #6b7280;
+        --border-color: #e5e7eb;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      }
+      body {
+        background-color: var(--bg-gray);
+        color: var(--text-dark);
+        line-height: 1.5;
+        min-height: 100vh;
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/index-Ca0Fd01v.js"></script>
+  </head>
+  <!-- [KYA KARTA HAI]: Document body jisme React mount point aur entry script hota hai -->
+  <!-- [KYU ZAROORI HAI]: Client-side rendering application ko host karne ke liye -->
+  <!-- [KAISE CHALTA HAI]: Body tag container -->
+  <!-- [OUTPUT / SIDE EFFECT]: Body container -->
+  <!-- [VARIATIONS TO TRY]: Modal portal roots add kar sakte hain -->
+  <body>
+    <!-- [KYA KARTA HAI]: Root DOM div jisme React application render hoti hai -->
+    <!-- [KYU ZAROORI HAI]: ReactDOM.createRoot ka anchor target -->
+    <!-- [KAISE CHALTA HAI]: Standard <div id="root"> element -->
+    <!-- [OUTPUT / SIDE EFFECT]: React virtual DOM mounting anchor -->
+    <!-- [VARIATIONS TO TRY]: Add server-rendered HTML placeholder for SSR -->
+    <div id="root"></div>
+    <!-- [KYA KARTA HAI]: React entry script load karta hai as ES module -->
+    <!-- [KYU ZAROORI HAI]: Vite bundling pipeline ko connect karta hai -->
+    <!-- [KAISE CHALTA HAI]: type="module" script tag source pointing to /src/main.tsx -->
+    <!-- [OUTPUT / SIDE EFFECT]: React app bootstrapping -->
+    <!-- [VARIATIONS TO TRY]: Async / defer script loading -->
+  </body>
+</html>

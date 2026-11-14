@@ -1,0 +1,170 @@
+@model KiranaHub.MvcWeb.ViewModels.CartSummaryViewModel
+@{
+    ViewData["Title"] = "Your Shopping Cart";
+}
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-3 mb-4">
+            <div class="card-header bg-white py-3">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-cart3 text-success"></i> Items in Your Cart</h4>
+            </div>
+            <div class="card-body p-0">
+                @if (Model.Items.Count == 0)
+                {
+                    <div id="empty-cart-message" class="text-center py-5">
+                        <i class="bi bi-cart-x display-4 text-muted"></i>
+                        <h5 class="mt-3 text-secondary">Your cart is currently empty</h5>
+                        <p class="text-muted">Add some fresh groceries to get started.</p>
+                        <a asp-controller="Catalog" asp-action="Index" class="btn btn-success rounded-pill px-4">
+                            Browse Groceries
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" id="cart-table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Unit Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr id="cart-row-@item.ProductId">
+                                        <td>
+                                            <span class="fw-semibold text-dark">@item.ProductName</span>
+                                        </td>
+                                        <td>Rs. @item.UnitPrice.ToString("F2")</td>
+                                        <td>
+                                            <div class="input-group input-group-sm" style="width: 110px;">
+                                                <button class="btn btn-outline-secondary btn-update-qty" 
+                                                        data-product-id="@item.ProductId" data-delta="-1">-</button>
+                                                <span class="input-group-text bg-white px-3 fw-bold" id="qty-@item.ProductId">
+                                                    @item.Quantity
+                                                </span>
+                                                <button class="btn btn-outline-secondary btn-update-qty" 
+                                                        data-product-id="@item.ProductId" data-delta="1">+</button>
+                                            </div>
+                                        </td>
+                                        <td class="fw-bold text-success" id="line-total-@item.ProductId">
+                                            Rs. @item.LineTotal.ToString("F2")
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-link text-danger p-0 btn-remove-item"
+                                                    data-product-id="@item.ProductId">
+                                                <i class="bi bi-trash3"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Bill Summary Sidebar -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-3">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold">Order Summary</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Items Subtotal:</span>
+                    <span class="fw-semibold" id="cart-subtotal">Rs. @Model.Subtotal.ToString("F2")</span>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-muted">Delivery Fee (10-min rush):</span>
+                    <span class="fw-semibold text-success" id="cart-delivery">
+                        @(Model.DeliveryFee == 0 ? "FREE" : $"Rs. {Model.DeliveryFee:F2}")
+                    </span>
+                </div>
+                <hr />
+                <div class="d-flex justify-content-between mb-4">
+                    <span class="fs-5 fw-bold">Grand Total:</span>
+                    <span class="fs-5 fw-bold text-success" id="cart-grandtotal">Rs. @Model.GrandTotal.ToString("F2")</span>
+                </div>
+                <button class="btn btn-success w-100 py-2 rounded-pill fw-bold shadow-sm" id="btn-checkout">
+                    Proceed to 10-Min Checkout <i class="bi bi-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // [JQUERY AJAX]: Quantity Update (+ or -)
+            $('.btn-update-qty').on('click', function () {
+                var btn = $(this);
+                var productId = btn.data('product-id');
+                var delta = btn.data('delta');
+
+                $.ajax({
+                    url: '/Cart/UpdateQuantityAjax',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ productId: productId, delta: delta }),
+                    success: function (res) {
+                        if (res.success) {
+                            if (res.newQuantity <= 0) {
+                                // Row fade out and remove from DOM
+                                $('#cart-row-' + productId).fadeOut(300, function () { $(this).remove(); });
+                            } else {
+                                $('#qty-' + productId).text(res.newQuantity);
+                                $('#line-total-' + productId).text('Rs. ' + Number(res.newLineTotal).toFixed(2));
+                            }
+
+                            // Update Totals
+                            $('#cart-subtotal').text('Rs. ' + Number(res.subtotal).toFixed(2));
+                            $('#cart-delivery').text(res.deliveryFee === 0 ? "FREE" : 'Rs. ' + Number(res.deliveryFee).toFixed(2));
+                            $('#cart-grandtotal').text('Rs. ' + Number(res.grandTotal).toFixed(2));
+                            
+                            // Header badge update
+                            $('#header-cart-badge').text(res.totalItems);
+                            $('#header-cart-total').text('Rs. ' + Number(res.grandTotal).toFixed(2));
+
+                            showToast("Cart updated successfully.", false);
+                        }
+                    }
+                });
+            });
+
+            // [JQUERY AJAX]: Remove Item
+            $('.btn-remove-item').on('click', function () {
+                var productId = $(this).data('product-id');
+
+                $.ajax({
+                    url: '/Cart/RemoveItemAjax',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(productId),
+                    success: function (res) {
+                        if (res.success) {
+                            $('#cart-row-' + productId).fadeOut(300, function () { $(this).remove(); });
+                            $('#cart-subtotal').text('Rs. ' + Number(res.subtotal).toFixed(2));
+                            $('#cart-delivery').text(res.deliveryFee === 0 ? "FREE" : 'Rs. ' + Number(res.deliveryFee).toFixed(2));
+                            $('#cart-grandtotal').text('Rs. ' + Number(res.grandTotal).toFixed(2));
+                            $('#header-cart-badge').text(res.totalItems);
+                            $('#header-cart-total').text('Rs. ' + Number(res.grandTotal).toFixed(2));
+
+                            showToast("Item removed from cart.", false);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
+

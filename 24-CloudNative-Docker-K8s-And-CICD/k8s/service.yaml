@@ -1,0 +1,85 @@
+# ==============================================================================================
+# KiranaHub Cloud-Native: Kubernetes ClusterIP Service for Internal Microservice Discovery
+# [KYA KARTA HAI] Ephemeral pod IPs ke upar stable internal DNS name aur Layer 4 load balancing provide karta hai.
+# [KYU ZAROORI HAI] Pods destroy aur naye create hote rehte hain; consumers ko ek permanent IP & DNS name chahiye hota hai.
+# [KAISE CHALTA HAI] Kube-proxy iptables/IPVS rules maintain karke traffic ko live readiness-checked pods me distribute karta hai.
+# [OUTPUT / SIDE EFFECT] Service accessible via `kiranahub-api-svc.kiranahub.svc.cluster.local`.
+# [VARIATIONS TO TRY] Headless service (`clusterIP: None`) for direct gRPC client-side load balancing.
+# ==============================================================================================
+
+# [KYA KARTA HAI] Kubernetes core API version define karta hai.
+# [KYU ZAROORI HAI] Service resource v1 core group me belong karta hai.
+# [KAISE CHALTA HAI] K8s API server validates Service schema against core v1.
+# [OUTPUT / SIDE EFFECT] API version v1 selected.
+# [VARIATIONS TO TRY] None (standard v1).
+apiVersion: v1
+
+# [KYA KARTA HAI] Resource kind define karta hai.
+# [KYU ZAROORI HAI] K8s ko batana ki yeh ek Service networking object hai.
+# [KAISE CHALTA HAI] ServiceController manages virtual IP allocation.
+# [OUTPUT / SIDE EFFECT] Service object created.
+# [VARIATIONS TO TRY] Endpoints or EndpointSlice for manual IP assignment.
+kind: Service
+
+# [KYA KARTA HAI] Metadata block define karta hai.
+# [KYU ZAROORI HAI] Service name, namespace aur labels index karne ke liye.
+# [KAISE CHALTA HAI] Creates service registry entry in etcd.
+# [OUTPUT / SIDE EFFECT] Metadata object initialized.
+# [VARIATIONS TO TRY] Annotations for cloud load balancer integrations.
+metadata:
+  # [KYA KARTA HAI] Service ka DNS name declare karta hai.
+  # [KYU ZAROORI HAI] Frontend aur baaki microservices is name se HTTP calls karengi.
+  # [KAISE CHALTA HAI] CoreDNS service record register karta hai.
+  # [OUTPUT / SIDE EFFECT] Resolvable DNS `kiranahub-api-svc`.
+  # [VARIATIONS TO TRY] Shorter name like `api`.
+  name: kiranahub-api-svc
+  # [KYA KARTA HAI] Namespace scope set karta hai.
+  # [KYU ZAROORI HAI] Deployment pods ke same namespace me hona zaroori hai.
+  # [KAISE CHALTA HAI] Scoped to `kiranahub` namespace.
+  # [OUTPUT / SIDE EFFECT] Namespace assignment.
+  # [VARIATIONS TO TRY] Default namespace.
+  namespace: kiranahub
+  # [KYA KARTA HAI] Categorization labels attach karta hai.
+  # [KYU ZAROORI HAI] Observability and metrics collection grouping.
+  # [KAISE CHALTA HAI] Key-value labels stored.
+  # [OUTPUT / SIDE EFFECT] Labels mapped.
+  # [VARIATIONS TO TRY] Add `app.kubernetes.io/name: kiranahub`.
+  labels:
+    app: kiranahub-api
+
+# [KYA KARTA HAI] Service specification block.
+# [KYU ZAROORI HAI] Service type, target ports, aur pod selector match rules define karna.
+# [KAISE CHALTA HAI] Kube-proxy listens for changes and writes routing rules.
+# [OUTPUT / SIDE EFFECT] Networking rules compiled.
+# [VARIATIONS TO TRY] Session affinity sticky sessions (`ClientIP`).
+spec:
+  # [KYA KARTA HAI] Service type define karta hai.
+  # [KYU ZAROORI HAI] ClusterIP ensure karta hai ki service sirf cluster ke andar accessible rahe, public internet par leak na ho.
+  # [KAISE CHALTA HAI] Allocates an internal virtual cluster IP from cluster CIDR pool.
+  # [OUTPUT / SIDE EFFECT] Private cluster IP allocated.
+  # [VARIATIONS TO TRY] `NodePort` or `LoadBalancer` for direct external access.
+  type: ClusterIP
+
+  # [KYA KARTA HAI] Pod selector criteria define karta hai.
+  # [KYU ZAROORI HAI] Kin pods ko traffic forward karna hai unka automatic match filter specify karna.
+  # [KAISE CHALTA HAI] EndpointController finds all pods with label `app: kiranahub-api` and active readiness probe.
+  # [OUTPUT / SIDE EFFECT] Dynamic endpoints list created.
+  # [VARIATIONS TO TRY] Multiple labels matching.
+  selector:
+    app: kiranahub-api
+
+  # [KYA KARTA HAI] Port mapping array define karta hai.
+  # [KYU ZAROORI HAI] Service ke incoming port ko container target port se map karna.
+  # [KAISE CHALTA HAI] Virtual IP port 80 traffic target container port 8080 par redirect hota hai.
+  # [OUTPUT / SIDE EFFECT] Port forwarding configured.
+  # [VARIATIONS TO TRY] Expose multiple ports like 80 (HTTP) and 443 (HTTPS).
+  ports:
+    # [KYA KARTA HAI] Port definition for standard HTTP traffic.
+    # [KYU ZAROORI HAI] Internal callers simple port 80 par request bhej sakein.
+    # [KAISE CHALTA HAI] Ingress or internal pods hit `http://kiranahub-api-svc:80`.
+    # [OUTPUT / SIDE EFFECT] Port 80 exposed.
+    # [VARIATIONS TO TRY] Named target port.
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 8080

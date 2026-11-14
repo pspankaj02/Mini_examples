@@ -1,0 +1,340 @@
+# ==============================================================================================
+# KiranaHub Cloud-Native: Full-Stack Production Docker Compose Infrastructure
+# [KYA KARTA HAI] Microservices, Databases, Caches, aur Message Brokers ko local multi-container cluster me orchestrate karta hai.
+# [KYU ZAROORI HAI] Developers ek single command `docker compose up` se poora production-like distributed environment run kar sakein.
+# [KAISE CHALTA HAI] Docker Compose daemon network bridge create karke services ko isolated containers me launch karta hai.
+# [OUTPUT / SIDE EFFECT] Self-contained quick-commerce backend & frontend stack.
+# [VARIATIONS TO TRY] Override compose files jaise `docker-compose.override.yml` for local debugging.
+# ==============================================================================================
+
+# [KYA KARTA HAI] Service definitions block initialize karta hai.
+# [KYU ZAROORI HAI] Saare individual application containers ko describe karne ke liye.
+# [KAISE CHALTA HAI] Docker Compose parser dictionary keys read karta hai.
+# [OUTPUT / SIDE EFFECT] Service registry open.
+# [VARIATIONS TO TRY] Compose V2 standard syntax.
+services:
+
+  # [KYA KARTA HAI] Core KiranaHub ASP.NET 10 Web API service definition.
+  # [KYU ZAROORI HAI] Business logic, REST endpoints, aur SignalR realtime connections handle karne ke liye.
+  # [KAISE CHALTA HAI] Multi-stage Dockerfile.api se container image build hoti hai.
+  # [OUTPUT / SIDE EFFECT] Web API container running on port 5000.
+  # [VARIATIONS TO TRY] Replicas scale karna `deploy: replicas: 3`.
+  kiranahub-api:
+    # [KYA KARTA HAI] API image build context specify karta hai.
+    # [KYU ZAROORI HAI] Docker daemon ko source directory aur custom Dockerfile path batana.
+    # [KAISE CHALTA HAI] Context folder se files stream karta hai.
+    # [OUTPUT / SIDE EFFECT] Build instructions set.
+    # [VARIATIONS TO TRY] Pre-built image pull karna Docker Hub se.
+    build:
+      # [KYA KARTA HAI] Root directory context set karta hai monorepo files access karne ke liye.
+      # [KYU ZAROORI HAI] csproj aur shared dependencies ko access karne ke liye root context mandatory hai.
+      # [KAISE CHALTA HAI] Sets context to parent workspace folder.
+      # [OUTPUT / SIDE EFFECT] Root context loaded.
+      # [VARIATIONS TO TRY] Subfolder context with relative path.
+      context: ..
+      # [KYA KARTA HAI] Specific API Dockerfile specify karta hai.
+      # [KYU ZAROORI HAI] Default Dockerfile ke bajaye customized multi-stage API file use karne ke liye.
+      # [KAISE CHALTA HAI] Points to Dockerfile.api.
+      # [OUTPUT / SIDE EFFECT] Correct Dockerfile chosen.
+      # [VARIATIONS TO TRY] Debug dockerfile for development.
+      dockerfile: 24-CloudNative-Docker-K8s-And-CICD/Dockerfile.api
+    # [KYA KARTA HAI] Explicit container name assign karta hai.
+    # [KYU ZAROORI HAI] Easy CLI inspection `docker logs kiranahub-api` ke liye.
+    # [KAISE CHALTA HAI] Overrides auto-generated hash name.
+    # [OUTPUT / SIDE EFFECT] Predictable container naming.
+    # [VARIATIONS TO TRY] Omit for auto-scaling instance names.
+    container_name: kiranahub-api
+    # [KYA KARTA HAI] Host port ko container port se map karta hai.
+    # [KYU ZAROORI HAI] Developer browser ya Postman se API access kar sakein.
+    # [KAISE CHALTA HAI] Docker iptables port forwarding rule create karta hai.
+    # [OUTPUT / SIDE EFFECT] Port 5000 mapped to container's 8080.
+    # [VARIATIONS TO TRY] Change host port to 8080 or random ephemeral port.
+    ports:
+      - "5000:8080"
+    # [KYA KARTA HAI] Environment configuration variables inject karta hai.
+    # [KYU ZAROORI HAI] Database, Redis, aur RabbitMQ connection strings dynamically provide karna bina code change ke.
+    # [KAISE CHALTA HAI] Container startup par process environment variables set hote hain.
+    # [OUTPUT / SIDE EFFECT] Runtime configuration available.
+    # [VARIATIONS TO TRY] Use `.env` file for secrets.
+    environment:
+      # [KYA KARTA HAI] ASP.NET runtime environment mode set karta hai.
+      # [KYU ZAROORI HAI] Production middleware pipelines enable karne ke liye.
+      # [KAISE CHALTA HAI] Reads environment variable in WebApplicationBuilder.
+      # [OUTPUT / SIDE EFFECT] Environment set to Development for local debug logs.
+      # [VARIATIONS TO TRY] Production or Staging.
+      - ASPNETCORE_ENVIRONMENT=Development
+      # [KYA KARTA HAI] Redis connection string provide karta hai compose service DNS name se.
+      # [KYU ZAROORI HAI] API distributed cache aur geospatial router ko Redis cluster se connect karna.
+      # [KAISE CHALTA HAI] Internal Docker DNS `kiranahub-redis` ko service IP me resolve karta hai.
+      # [OUTPUT / SIDE EFFECT] Redis connected.
+      # [VARIATIONS TO TRY] Add password credentials `kiranahub-redis:6379,password=secret`.
+      - ConnectionStrings__Redis=kiranahub-redis:6379
+      # [KYA KARTA HAI] RabbitMQ connection string provide karta hai.
+      # [KYU ZAROORI HAI] Event-driven MassTransit Saga messages publish aur consume karne ke liye.
+      # [KAISE CHALTA HAI] MassTransit uses amqp URI to connect to RabbitMQ broker container.
+      # [OUTPUT / SIDE EFFECT] RabbitMQ connected.
+      # [VARIATIONS TO TRY] Virtual host configuration `/vhost/kirana`.
+      - ConnectionStrings__RabbitMQ=amqp://guest:guest@kiranahub-rabbitmq:5672/
+    # [KYA KARTA HAI] Container startup dependencies and health checks verify karta hai.
+    # [KYU ZAROORI HAI] API tabhi start ho jab Redis, Postgres, aur RabbitMQ fully ready ho chuke hon (Race condition prevention).
+    # [KAISE CHALTA HAI] Docker Compose dependencies ke healthcheck pass hone ka wait karta hai.
+    # [OUTPUT / SIDE EFFECT] Ordered, reliable boot sequence.
+    # [VARIATIONS TO TRY] `condition: service_started` for non-blocking start.
+    depends_on:
+      kiranahub-redis:
+        # [KYA KARTA HAI] Redis healthcheck pass hone ka wait karta hai.
+        # [KYU ZAROORI HAI] Agar Redis ready nahi hoga toh startup cache initialization crash ho jayegi.
+        # [KAISE CHALTA HAI] Evaluates health condition.
+        # [OUTPUT / SIDE EFFECT] Gate condition satisfied.
+        # [VARIATIONS TO TRY] Service started condition.
+        condition: service_healthy
+      kiranahub-rabbitmq:
+        # [KYA KARTA HAI] RabbitMQ broker startup health check verify karta hai.
+        # [KYU ZAROORI HAI] Erlang OTP boot time leta hai; premature connection failure roki ja sake.
+        # [KAISE CHALTA HAI] Waits for rabbitmq ping pass.
+        # [OUTPUT / SIDE EFFECT] Gate condition satisfied.
+        # [VARIATIONS TO TRY] Retry policy in code.
+        condition: service_healthy
+    # [KYA KARTA HAI] Network segregation configure karta hai.
+    # [KYU ZAROORI HAI] Security isolation — API frontend aur backend dono networks me bridge ki tarah communicate karegi.
+    # [KAISE CHALTA HAI] Attaches container network interfaces.
+    # [OUTPUT / SIDE EFFECT] Dual network access.
+    # [VARIATIONS TO TRY] Dedicated management network for metrics.
+    networks:
+      - frontend-net
+      - backend-net
+
+  # [KYA KARTA HAI] KiranaHub React/Vite Storefront web application service.
+  # [KYU ZAROORI HAI] Customers ko shopping cart, product catalog, aur live delivery tracking UI dikhane ke liye.
+  # [KAISE CHALTA HAI] Nginx unprivileged container me static pre-built assets serve hote hain.
+  # [OUTPUT / SIDE EFFECT] Web storefront running on port 3000.
+  # [VARIATIONS TO TRY] Next.js Node SSR container mode.
+  kiranahub-web:
+    # [KYA KARTA HAI] Web image build context provide karta hai.
+    # [KYU ZAROORI HAI] Multi-stage Dockerfile.web run karne ke liye.
+    # [KAISE CHALTA HAI] Streams files from root.
+    # [OUTPUT / SIDE EFFECT] Build context ready.
+    # [VARIATIONS TO TRY] Pre-built registry image.
+    build:
+      context: ..
+      dockerfile: 24-CloudNative-Docker-K8s-And-CICD/Dockerfile.web
+    # [KYA KARTA HAI] Container name assign karta hai.
+    # [KYU ZAROORI HAI] Fast container management.
+    # [KAISE CHALTA HAI] Custom name assigned.
+    # [OUTPUT / SIDE EFFECT] Name set to kiranahub-web.
+    # [VARIATIONS TO TRY] Default name.
+    container_name: kiranahub-web
+    # [KYA KARTA HAI] Host port 3000 ko Nginx port 8080 par map karta hai.
+    # [KYU ZAROORI HAI] Web developers http://localhost:3000 par browser open kar sakein.
+    # [KAISE CHALTA HAI] Port forwarding rule established.
+    # [OUTPUT / SIDE EFFECT] Port 3000 exposed to host.
+    # [VARIATIONS TO TRY] Port 80 for production edge.
+    ports:
+      - "3000:8080"
+    # [KYA KARTA HAI] Web container ko API ready hone ke baad start karta hai.
+    # [KYU ZAROORI HAI] Storefront load hote hi API call karega, isliye API ka running hona better UX deta hai.
+    # [KAISE CHALTA HAI] Waits for kiranahub-api service to start.
+    # [OUTPUT / SIDE EFFECT] Startup sequence ordered.
+    # [VARIATIONS TO TRY] Parallel startup without depends_on.
+    depends_on:
+      - kiranahub-api
+    # [KYA KARTA HAI] Frontend network join karta hai.
+    # [KYU ZAROORI HAI] Web container ko backend DBs se isolate rakhta hai (Zero direct DB exposure to frontend).
+    # [KAISE CHALTA HAI] Joins frontend bridge.
+    # [OUTPUT / SIDE EFFECT] Isolated in frontend-net.
+    # [VARIATIONS TO TRY] DMZ subnet.
+    networks:
+      - frontend-net
+
+  # [KYA KARTA HAI] Redis In-Memory Cache, Geospatial Router, aur Streams broker service.
+  # [KYU ZAROORI HAI] Sub-millisecond latency caching aur rider GPS telemetry handling ke liye.
+  # [KAISE CHALTA HAI] Redis 7 alpine official image runs in-memory with optional RDB snapshotting.
+  # [OUTPUT / SIDE EFFECT] Redis server active on port 6379.
+  # [VARIATIONS TO TRY] Redis Cluster with Sentinel for HA.
+  kiranahub-redis:
+    # [KYA KARTA HAI] Official lightweight Redis 7 image pull karta hai.
+    # [KYU ZAROORI HAI] Proven, stable, fast in-memory engine.
+    # [KAISE CHALTA HAI] Docker pulls `redis:7-alpine`.
+    # [OUTPUT / SIDE EFFECT] Official base loaded.
+    # [VARIATIONS TO TRY] Redis Stack with native JSON and search modules.
+    image: redis:7-alpine
+    # [KYA KARTA HAI] Container name assign karta hai.
+    # [KYU ZAROORI HAI] Fixed identifier for Docker DNS resolution.
+    # [KAISE CHALTA HAI] Name registered in bridge network.
+    # [OUTPUT / SIDE EFFECT] Service resolvable as `kiranahub-redis`.
+    # [VARIATIONS TO TRY] Auto-generated name.
+    container_name: kiranahub-redis
+    # [KYA KARTA HAI] Redis port 6379 host par expose karta hai debugging ke liye.
+    # [KYU ZAROORI HAI] RedisInsight GUI client se developer local inspection kar sake.
+    # [KAISE CHALTA HAI] Maps host 6379 to container 6379.
+    # [OUTPUT / SIDE EFFECT] Redis port open.
+    # [VARIATIONS TO TRY] Expose only in development, hide in production.
+    ports:
+      - "6379:6379"
+    # [KYA KARTA HAI] Persistent volume mount karta hai Redis RDB snapshots ke liye.
+    # [KYU ZAROORI HAI] Container restart hone par geospatial dark-store indexes persist rahein.
+    # [KAISE CHALTA HAI] Docker volume `redisdata` container ke `/data` folder par mount hoti hai.
+    # [OUTPUT / SIDE EFFECT] Disk persistence enabled.
+    # [VARIATIONS TO TRY] AOF (Append Only File) mode enabled.
+    volumes:
+      - redisdata:/data
+    # [KYA KARTA HAI] Healthcheck probe configure karta hai.
+    # [KYU ZAROORI HAI] Dependents ko pata chal sake ki Redis fully ready aur responsive hai.
+    # [KAISE CHALTA HAI] Periodic `redis-cli ping` command execute karta hai.
+    # [OUTPUT / SIDE EFFECT] Healthy status emitted on "PONG" response.
+    # [VARIATIONS TO TRY] Timeout and retries customization.
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    # [KYA KARTA HAI] Backend isolated network attach karta hai.
+    # [KYU ZAROORI HAI] Database aur Cache ko public internet aur frontend se isolate rakhna.
+    # [KAISE CHALTA HAI] Joins backend bridge.
+    # [OUTPUT / SIDE EFFECT] Accessible only to backend services.
+    # [VARIATIONS TO TRY] Private VPC subnet.
+    networks:
+      - backend-net
+
+  # [KYA KARTA HAI] RabbitMQ Message Broker with Management Web UI.
+  # [KYU ZAROORI HAI] Asynchronous event-driven sagas aur outbox pattern messages route karne ke liye.
+  # [KAISE CHALTA HAI] Official Erlang-based RabbitMQ 3 image boots AMQP engine and Web UI.
+  # [OUTPUT / SIDE EFFECT] AMQP broker on 5672, Web UI on 15672.
+  # [VARIATIONS TO TRY] RabbitMQ with Quorum queues for zero message loss.
+  kiranahub-rabbitmq:
+    # [KYA KARTA HAI] RabbitMQ management image pull karta hai.
+    # [KYU ZAROORI HAI] Developer ko queue length aur message flow visual dashboard par dikhana.
+    # [KAISE CHALTA HAI] Docker pulls `rabbitmq:3-management-alpine`.
+    # [OUTPUT / SIDE EFFECT] Alpine base with dashboard enabled.
+    # [VARIATIONS TO TRY] Cluster setup with 3 nodes.
+    image: rabbitmq:3-management-alpine
+    # [KYA KARTA HAI] Fixed container name define karta hai.
+    # [KYU ZAROORI HAI] Internal DNS name `kiranahub-rabbitmq` banata hai.
+    # [KAISE CHALTA HAI] Registered with Docker DNS.
+    # [OUTPUT / SIDE EFFECT] Resolvable DNS.
+    # [VARIATIONS TO TRY] Custom name.
+    container_name: kiranahub-rabbitmq
+    # [KYA KARTA HAI] AMQP protocol aur Management Dashboard ports map karta hai.
+    # [KYU ZAROORI HAI] Port 5672 for messaging, Port 15672 for web dashboard.
+    # [KAISE CHALTA HAI] Iptables rules map both ports.
+    # [OUTPUT / SIDE EFFECT] Ports 5672 & 15672 active.
+    # [VARIATIONS TO TRY] Restrict 15672 to VPN in production.
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    # [KYA KARTA HAI] RabbitMQ healthcheck command specify karta hai.
+    # [KYU ZAROORI HAI] Erlang nodes ko fully initialize hone tak dependent API ko hold karna.
+    # [KAISE CHALTA HAI] Runs `rabbitmq-diagnostics -q ping`.
+    # [OUTPUT / SIDE EFFECT] Healthy status on broker readiness.
+    # [VARIATIONS TO TRY] Check specific vhost readiness.
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # [KYA KARTA HAI] Backend network me place karta hai.
+    # [KYU ZAROORI HAI] Direct public access restrict karke API ko messaging access dena.
+    # [KAISE CHALTA HAI] Attaches backend-net bridge.
+    # [OUTPUT / SIDE EFFECT] Protected messaging layer.
+    # [VARIATIONS TO TRY] Dedicated broker network.
+    networks:
+      - backend-net
+
+  # [KYA KARTA HAI] PostgreSQL Relational Database for Order & Inventory transactional persistence.
+  # [KYU ZAROORI HAI] ACID compliance, foreign keys, aur transactional outbox storage ke liye.
+  # [KAISE CHALTA HAI] Official Postgres 16 alpine engine boots relational storage.
+  # [OUTPUT / SIDE EFFECT] Postgres SQL database listening on port 5432.
+  # [VARIATIONS TO TRY] Read-replica clustering with Patroni.
+  kiranahub-postgres:
+    # [KYA KARTA HAI] Official Postgres 16 alpine image pull karta hai.
+    # [KYU ZAROORI HAI] Modern SQL features, JSONB, aur rock-solid reliability.
+    # [KAISE CHALTA HAI] Pulls `postgres:16-alpine`.
+    # [OUTPUT / SIDE EFFECT] Postgres engine ready.
+    # [VARIATIONS TO TRY] PostGIS extension image for geospatial SQL.
+    image: postgres:16-alpine
+    # [KYA KARTA HAI] Container name define karta hai.
+    # [KYU ZAROORI HAI] Easy reference and Docker DNS resolution.
+    # [KAISE CHALTA HAI] Name mapped in Docker engine.
+    # [OUTPUT / SIDE EFFECT] Hostname `kiranahub-postgres`.
+    # [VARIATIONS TO TRY] Custom instance name.
+    container_name: kiranahub-postgres
+    # [KYA KARTA HAI] Host port 5432 map karta hai.
+    # [KYU ZAROORI HAI] DBeaver / pgAdmin se local database inspect karne ke liye.
+    # [KAISE CHALTA HAI] Forwards port 5432.
+    # [OUTPUT / SIDE EFFECT] Port 5432 open.
+    # [VARIATIONS TO TRY] Disable port mapping in production for zero host attack surface.
+    ports:
+      - "5432:5432"
+    # [KYA KARTA HAI] Database credentials aur initial schema name configure karta hai.
+    # [KYU ZAROORI HAI] Postgres initialization script automatically `kiranahub` database create kar sake.
+    # [KAISE CHALTA HAI] Injected as POSIX environment variables.
+    # [OUTPUT / SIDE EFFECT] DB `kiranahub` initialized with user `postgres`.
+    # [VARIATIONS TO TRY] Secrets manager in production.
+    environment:
+      - POSTGRES_DB=kiranahub
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=kiranapassword
+    # [KYA KARTA HAI] Persistent database volume mount karta hai.
+    # [KYU ZAROORI HAI] Container delete ya update hone par data loss na ho.
+    # [KAISE CHALTA HAI] Mounts named volume `pgdata` to `/var/lib/postgresql/data`.
+    # [OUTPUT / SIDE EFFECT] Data persists across container teardowns.
+    # [VARIATIONS TO TRY] Host bind mount for local dev files.
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # [KYA KARTA HAI] Postgres ping probe run karta hai.
+    # [KYU ZAROORI HAI] Confirms database is accepting TCP socket connections before API boots.
+    # [KAISE CHALTA HAI] Executes `pg_isready -U postgres`.
+    # [OUTPUT / SIDE EFFECT] Healthy status on socket readiness.
+    # [VARIATIONS TO TRY] Check specific database connection query.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    # [KYA KARTA HAI] Backend network assign karta hai.
+    # [KYU ZAROORI HAI] Protects relational tables from external direct connection.
+    # [KAISE CHALTA HAI] Attaches backend-net bridge.
+    # [OUTPUT / SIDE EFFECT] Internal database access only.
+    # [VARIATIONS TO TRY] Dedicated DB VLAN.
+    networks:
+      - backend-net
+
+# [KYA KARTA HAI] Named persistent volumes declaration block.
+# [KYU ZAROORI HAI] Storage volumes ko container lifecycle se independent manage karna.
+# [KAISE CHALTA HAI] Docker volume storage driver creates local disk spaces.
+# [OUTPUT / SIDE EFFECT] Persistent volumes registered.
+# [VARIATIONS TO TRY] Cloud EBS/NFS volume drivers.
+volumes:
+  # [KYA KARTA HAI] Postgres relational data storage volume.
+  # [KYU ZAROORI HAI] Data retention across service updates.
+  # [KAISE CHALTA HAI] Volume allocated on host disk.
+  # [OUTPUT / SIDE EFFECT] Named volume pgdata.
+  # [VARIATIONS TO TRY] Encrypted volume mount.
+  pgdata:
+  # [KYA KARTA HAI] Redis cache snapshot persistent volume.
+  # [KYU ZAROORI HAI] Retains warm cache across restarts.
+  # [KAISE CHALTA HAI] Volume allocated on host disk.
+  # [OUTPUT / SIDE EFFECT] Named volume redisdata.
+  # [VARIATIONS TO TRY] Ephemeral tmpfs mount for pure in-memory without disk writes.
+  redisdata:
+
+# [KYA KARTA HAI] Isolated virtual bridge networks define karta hai.
+# [KYU ZAROORI HAI] Multi-tier architecture security segmentation enforce karne ke liye.
+# [KAISE CHALTA HAI] Linux bridge interfaces create hote hain Docker daemon dwara.
+# [OUTPUT / SIDE EFFECT] Network isolation established.
+# [VARIATIONS TO TRY] Overlay network for multi-host Docker Swarm/Kubernetes.
+networks:
+  # [KYA KARTA HAI] Frontend web tier network.
+  # [KYU ZAROORI HAI] Allows Storefront to communicate with API gateway.
+  # [KAISE CHALTA HAI] Isolated bridge network created.
+  # [OUTPUT / SIDE EFFECT] frontend-net active.
+  # [VARIATIONS TO TRY] Encrypted overlay.
+  frontend-net:
+    driver: bridge
+  # [KYA KARTA HAI] Backend data tier network.
+  # [KYU ZAROORI HAI] Restricts DB, Cache, and Message broker access strictly to Web API.
+  # [KAISE CHALTA HAI] Isolated bridge network created.
+  # [OUTPUT / SIDE EFFECT] backend-net active.
+  # [VARIATIONS TO TRY] Custom subnet and gateway IP configuration.
+  backend-net:
+    driver: bridge

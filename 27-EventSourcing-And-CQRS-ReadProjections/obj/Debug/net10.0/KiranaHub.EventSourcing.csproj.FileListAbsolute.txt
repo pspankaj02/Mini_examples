@@ -1,0 +1,15 @@
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\obj\Debug\net10.0\KiranaHub.EventSourcing.GeneratedMSBuildEditorConfig.editorconfig
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\obj\Debug\net10.0\KiranaHub.EventSourcing.AssemblyInfoInputs.cache
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\obj\Debug\net10.0\KiranaHub.EventSourcing.AssemblyInfo.cs
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\obj\Debug\net10.0\KiranaHub.EventSourcing.csproj.CoreCompileInputs.cache
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\bin\Debug\net10.0\KiranaHub.EventSourcing.exe
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\bin\Debug\net10.0\KiranaHub.EventSourcing.deps.json
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\bin\Debug\net10.0\KiranaHub.EventSourcing.runtimeconfig.json
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\bin\Debug\net10.0\KiranaHub.EventSourcing.dll
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\bin\Debug\net10.0\KiranaHub.EventSourcing.pdb
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\obj\Debug\net10.0\KiranaHub.EventSourcing.dll
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\obj\Debug\net10.0\refint\KiranaHub.EventSourcing.dll
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\obj\Debug\net10.0\KiranaHub.EventSourcing.pdb
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\obj\Debug\net10.0\KiranaHub.EventSourcing.genruntimeconfig.cache
+d:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\obj\Debug\net10.0\ref\KiranaHub.EventSourcing.dll
+D:\ToLearn_Antigravity\27-EventSourcing-And-CQRS-ReadProjections\obj\Debug\net10.0\KiranaHub.EventSourcing.sourcelink.json

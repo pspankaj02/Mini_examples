@@ -1,0 +1,89 @@
+<Solution>
+  <Folder Name="/01-Basic-CSharp-And-OOPS/">
+    <Project Path="01-Basic-CSharp-And-OOPS/KiranaHub.BasicsAndOops.csproj" />
+  </Folder>
+  <Folder Name="/02-SOLID-Principles-In-Action/">
+    <Project Path="02-SOLID-Principles-In-Action/KiranaHub.SolidPrinciples.csproj" />
+  </Folder>
+  <Folder Name="/03-DSA-Core-With-CSharp/">
+    <Project Path="03-DSA-Core-With-CSharp/KiranaHub.DSA.csproj" />
+  </Folder>
+  <Folder Name="/04-LINQ-DeepDive/">
+    <Project Path="04-LINQ-DeepDive/KiranaHub.LinqDeepDive.csproj" />
+  </Folder>
+  <Folder Name="/05-Async-And-MultiThreading/">
+    <Project Path="05-Async-And-MultiThreading/KiranaHub.AsyncAndThreads.csproj" />
+  </Folder>
+  <Folder Name="/06-Memory-Management-And-Reflection/">
+    <Project Path="06-Memory-Management-And-Reflection/KiranaHub.MemoryAndReflection.csproj" />
+  </Folder>
+  <Folder Name="/07-Unit-Testing-And-Mocking/">
+    <Project Path="07-Unit-Testing-And-Mocking/KiranaHub.UnitTests.csproj" />
+  </Folder>
+  <Folder Name="/08-AspNetCore-MVC-With-Razor-And-JQuery/">
+    <Project Path="08-AspNetCore-MVC-With-Razor-And-JQuery/KiranaHub.MvcWeb.csproj" />
+  </Folder>
+  <Folder Name="/09-AspNetCore-WebAPI-Fundamentals/">
+    <Project Path="09-AspNetCore-WebAPI-Fundamentals/KiranaHub.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/10-EFCore-And-MemoryCache/">
+    <Project Path="10-EFCore-And-MemoryCache/KiranaHub.DataAndCaching.csproj" />
+  </Folder>
+  <Folder Name="/11-Auth-Identity-And-Security/">
+    <Project Path="11-Auth-Identity-And-Security/KiranaHub.AuthAndSecurity.csproj" />
+  </Folder>
+  <Folder Name="/12-CleanArchitecture-DDD-CQRS-MediatR/">
+    <Project Path="12-CleanArchitecture-DDD-CQRS-MediatR/KiranaHub.CleanArchitecture.csproj" />
+  </Folder>
+  <Folder Name="/13-RealTime-SignalR-And-BackgroundJobs/">
+    <Project Path="13-RealTime-SignalR-And-BackgroundJobs/KiranaHub.RealTimeAndJobs.csproj" />
+  </Folder>
+  <Folder Name="/14-Microservices-gRPC-And-APIGateway/">
+    <Project Path="14-Microservices-gRPC-And-APIGateway/KiranaHub.MicroservicesAndGateway.csproj" />
+  </Folder>
+  <Folder Name="/15-Logging-Monitoring-And-Metrics/">
+    <Project Path="15-Logging-Monitoring-And-Metrics/KiranaHub.LoggingAndMetrics.csproj" />
+  </Folder>
+  <Folder Name="/16-Blazor-Server-Wasm-And-MudBlazor/">
+    <Project Path="16-Blazor-Server-Wasm-And-MudBlazor/KiranaHub.BlazorStore.csproj" />
+  </Folder>
+  <Folder Name="/22-EventDriven-MassTransit-And-RabbitMQ-Saga/">
+    <Project Path="22-EventDriven-MassTransit-And-RabbitMQ-Saga/KiranaHub.EventDrivenSaga.csproj" />
+  </Folder>
+  <Folder Name="/23-Redis-Streams-And-Geospatial-Routing/">
+    <Project Path="23-Redis-Streams-And-Geospatial-Routing/KiranaHub.RedisAdvanced.csproj" />
+  </Folder>
+  <Folder Name="/26-ChaosEngineering-And-LoadTesting/">
+    <Project Path="26-ChaosEngineering-And-LoadTesting/KiranaHub.ChaosAndLoadTesting.csproj" />
+  </Folder>
+  <Folder Name="/27-EventSourcing-And-CQRS-ReadProjections/">
+    <Project Path="27-EventSourcing-And-CQRS-ReadProjections/KiranaHub.EventSourcing.csproj" />
+  </Folder>
+  <Folder Name="/28-Kafka-StreamProcessing-And-FraudDetection/">
+    <Project Path="28-Kafka-StreamProcessing-And-FraudDetection/KiranaHub.KafkaStreaming.csproj" />
+  </Folder>
+  <Folder Name="/29-DatabaseSharding-And-ConsistentHashing/">
+    <Project Path="29-DatabaseSharding-And-ConsistentHashing/KiranaHub.DatabaseSharding.csproj" />
+  </Folder>
+  <Folder Name="/30-FinTech-DoubleEntry-Ledger-And-Wallet/">
+    <Project Path="30-FinTech-DoubleEntry-Ledger-And-Wallet/KiranaHub.FinTechLedger.csproj" />
+  </Folder>
+  <Folder Name="/31-ZeroTrust-mTLS-And-OAuth2-IdentityServer/">
+    <Project Path="31-ZeroTrust-mTLS-And-OAuth2-IdentityServer/KiranaHub.ZeroTrustSecurity.csproj" />
+  </Folder>
+  <Folder Name="/32-ActorModel-MicrosoftOrleans-VirtualActors/">
+    <Project Path="32-ActorModel-MicrosoftOrleans-VirtualActors/KiranaHub.VirtualActors.csproj" />
+  </Folder>
+  <Folder Name="/33-MultiRegion-ActiveActive-And-CRDTs/">
+    <Project Path="33-MultiRegion-ActiveActive-And-CRDTs/KiranaHub.MultiRegionCRDT.csproj" />
+  </Folder>
+  <Folder Name="/34-IoT-Edge-And-ColdChain-WarehouseAutomation/">
+    <Project Path="34-IoT-Edge-And-ColdChain-WarehouseAutomation/KiranaHub.WarehouseIoT.csproj" />
+  </Folder>
+  <Folder Name="/35-HighPerformance-Hybrid-SearchEngine/">
+    <Project Path="35-HighPerformance-Hybrid-SearchEngine/KiranaHub.HybridSearch.csproj" />
+  </Folder>
+  <Folder Name="/36-DistributedTracing-APM-And-OpenTelemetry/">
+    <Project Path="36-DistributedTracing-APM-And-OpenTelemetry/KiranaHub.TracingApm.csproj" />
+  </Folder>
+</Solution>

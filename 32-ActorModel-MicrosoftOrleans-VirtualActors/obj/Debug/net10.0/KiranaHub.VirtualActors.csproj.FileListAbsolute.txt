@@ -1,0 +1,15 @@
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\bin\Debug\net10.0\KiranaHub.VirtualActors.exe
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\bin\Debug\net10.0\KiranaHub.VirtualActors.deps.json
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\bin\Debug\net10.0\KiranaHub.VirtualActors.runtimeconfig.json
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\bin\Debug\net10.0\KiranaHub.VirtualActors.dll
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\bin\Debug\net10.0\KiranaHub.VirtualActors.pdb
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\obj\Debug\net10.0\KiranaHub.VirtualActors.GeneratedMSBuildEditorConfig.editorconfig
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\obj\Debug\net10.0\KiranaHub.VirtualActors.AssemblyInfoInputs.cache
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\obj\Debug\net10.0\KiranaHub.VirtualActors.AssemblyInfo.cs
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\obj\Debug\net10.0\KiranaHub.VirtualActors.csproj.CoreCompileInputs.cache
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\obj\Debug\net10.0\KiranaHub.VirtualActors.dll
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\obj\Debug\net10.0\refint\KiranaHub.VirtualActors.dll
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\obj\Debug\net10.0\KiranaHub.VirtualActors.pdb
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\obj\Debug\net10.0\KiranaHub.VirtualActors.genruntimeconfig.cache
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\obj\Debug\net10.0\ref\KiranaHub.VirtualActors.dll
+D:\ToLearn_Antigravity\32-ActorModel-MicrosoftOrleans-VirtualActors\obj\Debug\net10.0\KiranaHub.VirtualActors.sourcelink.json

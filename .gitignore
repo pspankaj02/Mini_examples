@@ -1,0 +1,5 @@
+# Tools excluded as instructed
+tools/
+
+# Node dependencies (exceeds GitHub 100MB blob limit due to next-swc binary)
+node_modules/

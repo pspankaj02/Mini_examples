@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "ELJkG+FDiVQ=",
+  "success": true,
+  "projectFilePath": "D:\\ToLearn_Antigravity\\16-Blazor-Server-Wasm-And-MudBlazor\\KiranaHub.BlazorStore.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\panka\\.nuget\\packages\\mudblazor\\8.2.0\\mudblazor.8.2.0.nupkg.sha512"
+  ],
+  "logs": []
+}

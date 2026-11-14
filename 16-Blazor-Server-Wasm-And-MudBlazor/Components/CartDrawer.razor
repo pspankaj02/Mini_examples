@@ -1,0 +1,184 @@
+@using KiranaHub.BlazorStore.Components.Architecture
+@using KiranaHub.BlazorStore.Models
+@using KiranaHub.BlazorStore.Services
+@using MudBlazor
+
+@*
+    =========================================================================================
+    [TOPIC]: MudBlazor Sliding Cart Drawer (MudDrawer)
+    [PURPOSE]: Right-hand side slide-out drawer providing seamless cart management.
+    =========================================================================================
+*@
+
+@implements IDisposable
+@inject ICartStateService CartState
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudDrawer @bind-Open="IsOpen" 
+           Anchor="Anchor.End" 
+           Elevation="4" 
+           Variant="DrawerVariant.Temporary" 
+           Width="380px"
+           Class="pa-4 d-flex flex-column justify-space-between" 
+           Style="height: 100vh;">
+    
+    @* --- DRAWER HEADER --- *@
+    <div>
+        <div class="d-flex justify-space-between align-items-center mb-3">
+            <div class="d-flex align-items-center">
+                <MudIcon Icon="@Icons.Material.Filled.ShoppingCart" Color="Color.Primary" Class="mr-2" />
+                <MudText Typo="Typo.h6" Class="font-weight-bold">My Grocery Cart</MudText>
+            </div>
+            <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" OnClick="@(() => IsOpen = false)" />
+        </div>
+        <MudDivider Class="mb-3" />
+
+        @* --- CART ITEMS LIST --- *@
+        @if (CartState.Items.Count == 0)
+        {
+            <div class="text-center py-5 text-muted">
+                <MudIcon Icon="@Icons.Material.Outlined.RemoveShoppingCart" Size="Size.Large" Class="mb-2 text-secondary" />
+                <MudText Typo="Typo.subtitle1">Your cart is empty!</MudText>
+                <MudText Typo="Typo.caption">Add some delicious milk, atta, or snacks from the catalog.</MudText>
+            </div>
+        }
+        else
+        {
+            <div style="max-height: calc(100vh - 360px); overflow-y: auto; padding-right: 4px;">
+                @foreach (var item in CartState.Items)
+                {
+                    <MudPaper Elevation="1" Class="pa-3 mb-2 rounded-lg" @key="item.ProductId">
+                        <div class="d-flex justify-space-between align-items-start mb-2">
+                            <div>
+                                <MudText Typo="Typo.subtitle2" Class="font-weight-bold">@item.ProductName</MudText>
+                                <MudText Typo="Typo.caption" Class="text-muted">₹@item.UnitPrice.ToString("N2") each</MudText>
+                            </div>
+                            <MudIconButton Icon="@Icons.Material.Filled.DeleteOutline" 
+                                           Color="Color.Error" 
+                                           Size="Size.Small" 
+                                           OnClick="@(() => CartState.RemoveItem(item.ProductId))" />
+                        </div>
+                        <div class="d-flex justify-space-between align-items-center">
+                            @* Two-Way Binding with QuantityCounter *@
+                            <QuantityCounter Value="@item.Quantity" 
+                                             ValueChanged="@((int newQty) => HandleQuantityChange(item.ProductId, newQty, item.Quantity))" />
+                            <MudText Typo="Typo.subtitle2" Color="Color.Primary" Class="font-weight-bold">
+                                ₹@item.LineTotal.ToString("N2")
+                            </MudText>
+                        </div>
+                    </MudPaper>
+                }
+            </div>
+        }
+    </div>
+
+    @* --- DRAWER FOOTER / CHECKOUT BILL --- *@
+    @if (CartState.Items.Count > 0)
+    {
+        <div class="border-top pt-3">
+            @* Coupon Input *@
+            <div class="d-flex gap-2 mb-3">
+                <MudTextField @bind-Value="_couponCode" 
+                              Placeholder="Promo: KIRANA50" 
+                              Variant="Variant.Outlined" 
+                              Margin="Margin.Dense" />
+                <MudButton Variant="Variant.Outlined" 
+                           Color="Color.Secondary" 
+                           OnClick="ApplyCoupon"
+                           Disabled="@string.IsNullOrWhiteSpace(_couponCode)">
+                    Apply
+                </MudButton>
+            </div>
+
+            @* Bill Summary *@
+            <div class="d-flex justify-space-between mb-1">
+                <MudText Typo="Typo.body2">Subtotal:</MudText>
+                <MudText Typo="Typo.body2">₹@CartState.Subtotal.ToString("N2")</MudText>
+            </div>
+            <div class="d-flex justify-space-between mb-1">
+                <MudText Typo="Typo.body2">Delivery Fee:</MudText>
+                <MudText Typo="Typo.body2" Color="@(CartState.DeliveryFee == 0 ? Color.Success : Color.Default)">
+                    @(CartState.DeliveryFee == 0 ? "FREE" : $"₹{CartState.DeliveryFee:N2}")
+                </MudText>
+            </div>
+            @if (CartState.DiscountAmount > 0)
+            {
+                <div class="d-flex justify-space-between mb-1">
+                    <MudText Typo="Typo.body2" Color="Color.Success">Promo Discount:</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Success">-₹@CartState.DiscountAmount.ToString("N2")</MudText>
+                </div>
+            }
+            <MudDivider Class="my-2" />
+            <div class="d-flex justify-space-between align-items-center mb-3">
+                <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Grand Total:</MudText>
+                <MudText Typo="Typo.h6" Color="Color.Success" Class="font-weight-bold">₹@CartState.GrandTotal.ToString("N2")</MudText>
+            </div>
+
+            <MudButton Color="Color.Success" 
+                       Variant="Variant.Filled" 
+                       FullWidth="true" 
+                       Size="Size.Large" 
+                       StartIcon="@Icons.Material.Filled.CheckCircle"
+                       OnClick="OpenCheckoutDialog">
+                Proceed to Checkout
+            </MudButton>
+        </div>
+    }
+</MudDrawer>
+
+@code {
+    [Parameter]
+    public bool IsOpen { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsOpenChanged { get; set; }
+
+    private string _couponCode = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        // [KYA KARTA HAI]: Scoped cart state ke OnChange event ko subscribe karta hai.
+        CartState.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        // [KYA KARTA HAI]: Event unsubscription for leak prevention.
+        CartState.OnChange -= StateHasChanged;
+    }
+
+    private void HandleQuantityChange(int productId, int newQty, int oldQty)
+    {
+        int delta = newQty - oldQty;
+        CartState.UpdateQuantity(productId, delta);
+    }
+
+    private void ApplyCoupon()
+    {
+        if (CartState.ApplyCoupon(_couponCode))
+        {
+            Snackbar.Add("Coupon 'KIRANA50' applied! ₹50 discount added.", Severity.Success);
+            _couponCode = string.Empty;
+        }
+        else
+        {
+            Snackbar.Add("Invalid coupon or minimum cart value of ₹200 required.", Severity.Warning);
+        }
+    }
+
+    private async Task OpenCheckoutDialog()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = await DialogService.ShowAsync<OrderConfirmationDialog>("Checkout Order", options);
+        var result = await dialog.Result;
+
+        if (result != null && !result.Canceled && result.Data is string orderId)
+        {
+            IsOpen = false;
+            await IsOpenChanged.InvokeAsync(false);
+            Snackbar.Add($"Hooray! Order {orderId} confirmed for instant 10-minute delivery!", Severity.Success);
+        }
+    }
+}
+

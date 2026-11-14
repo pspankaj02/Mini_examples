@@ -1,0 +1,32 @@
+@model KiranaHub.MvcWeb.Models.GroceryProduct
+
+<div class="col-md-4 col-lg-3 mb-4">
+    <div class="card h-100 product-card border-0 shadow-sm rounded-3">
+        <div class="card-body d-flex flex-column">
+            <!-- Custom Tag Helper in action! -->
+            <div class="mb-2">
+                <kirana-badge is-perishable="@Model.IsPerishable" stock="@Model.Stock"></kirana-badge>
+                <span class="badge bg-light text-secondary rounded-pill border">@Model.Category</span>
+            </div>
+            <h5 class="card-title fs-6 fw-bold text-dark mt-1">@Model.Name</h5>
+            <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+                <div class="text-success fw-bold fs-5">
+                    Rs. @Model.Price.ToString("F2")
+                </div>
+                @if (Model.Stock > 0)
+                {
+                    <button class="btn btn-sm btn-outline-success btn-add-to-cart px-3 rounded-pill fw-semibold"
+                            data-product-id="@Model.Id"
+                            data-product-name="@Model.Name">
+                        <i class="bi bi-cart-plus"></i> Add
+                    </button>
+                }
+                else
+                {
+                    <button class="btn btn-sm btn-secondary px-3 rounded-pill" disabled>Sold Out</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

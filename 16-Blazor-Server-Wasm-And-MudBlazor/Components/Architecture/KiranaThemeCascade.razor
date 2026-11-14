@@ -1,0 +1,48 @@
+@*
+    =========================================================================================
+    [TOPIC]: Blazor Cascading Values & Parameters
+    [PURPOSE]: Sharing state/themes down the component tree without prop-drilling.
+    =========================================================================================
+*@
+
+<div class="card p-3 shadow-sm mb-4">
+    <h6 class="fw-bold mb-2">Cascading Theme Demonstration (Parent Component)</h6>
+    <p class="text-muted small">
+        Current Theme Mode: <strong>@(IsDarkMode ? "Dark Mode" : "Light Mode")</strong>
+    </p>
+
+    <button class="btn btn-sm btn-outline-dark mb-3" @onclick="ToggleTheme">
+        Toggle Cascading Theme
+    </button>
+
+    @* [KYA KARTA HAI]: CascadingValue component tree ke sabhi child components me state broadcast karta hai. *@
+    @* [KYU ZAROORI HAI]: Prop drilling se bachna: deep child components directly [CascadingParameter] se value read kar lete hain. *@
+    <CascadingValue Value="@CurrentTheme" IsFixed="false">
+        <div class="border rounded p-3 @(IsDarkMode ? "bg-dark text-white" : "bg-light text-dark")">
+            <span class="small text-muted">Direct Child Component Container:</span>
+            <ThemeChildConsumer />
+        </div>
+    </CascadingValue>
+</div>
+
+@code {
+    public class StoreThemeConfig
+    {
+        public bool IsDark { get; set; }
+        public string PrimaryColor { get; set; } = "#10B981";
+    }
+
+    private bool IsDarkMode { get; set; } = false;
+
+    private StoreThemeConfig CurrentTheme => new StoreThemeConfig
+    {
+        IsDark = IsDarkMode,
+        PrimaryColor = IsDarkMode ? "#34D399" : "#10B981"
+    };
+
+    private void ToggleTheme()
+    {
+        IsDarkMode = !IsDarkMode;
+    }
+}
+

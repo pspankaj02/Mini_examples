@@ -1,0 +1,33 @@
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    @* [KYA KARTA HAI]: Standard HTML5 UTF-8 character encoding set karta hai. *@
+    <meta charset="utf-8" />
+    @* [KYA KARTA HAI]: Responsive viewport meta tag for mobile screens. *@
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @* [KYA KARTA HAI]: Base application route URI path define karta hai. *@
+    <base href="/" />
+    @* [KYA KARTA HAI]: Google Roboto font load karta hai for MudBlazor Material Design. *@
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    @* [KYA KARTA HAI]: MudBlazor bundled CSS stylesheets load karta hai. *@
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+    @* [KYA KARTA HAI]: Bootstrap utility classes for responsive grids and cards. *@
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    @* [KYA KARTA HAI]: Dynamic title aur meta tags inject karne ke liye HeadOutlet component. *@
+    <HeadOutlet />
+</head>
+
+<body>
+    @* [KYA KARTA HAI]: Blazor root Router component render karta hai with InteractiveServer render mode. *@
+    @* [KYU ZAROORI HAI]: Real-time full-duplex WebSocket SignalR circuit establish karna between client browser and server. *@
+    <Routes @rendermode="InteractiveServer" />
+
+    @* [KYA KARTA HAI]: Blazor framework client script jo WebSockets ya WebAssembly runtime boot karta hai. *@
+    <script src="_framework/blazor.web.js"></script>
+    @* [KYA KARTA HAI]: MudBlazor JavaScript helpers load karta hai for dialogs, drawers, and popovers. *@
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+</body>
+
+</html>

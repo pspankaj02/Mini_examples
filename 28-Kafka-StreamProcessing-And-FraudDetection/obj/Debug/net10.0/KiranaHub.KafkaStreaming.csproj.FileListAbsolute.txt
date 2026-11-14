@@ -1,0 +1,15 @@
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\bin\Debug\net10.0\KiranaHub.KafkaStreaming.exe
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\bin\Debug\net10.0\KiranaHub.KafkaStreaming.deps.json
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\bin\Debug\net10.0\KiranaHub.KafkaStreaming.runtimeconfig.json
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\bin\Debug\net10.0\KiranaHub.KafkaStreaming.dll
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\bin\Debug\net10.0\KiranaHub.KafkaStreaming.pdb
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\obj\Debug\net10.0\KiranaHub.KafkaStreaming.GeneratedMSBuildEditorConfig.editorconfig
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\obj\Debug\net10.0\KiranaHub.KafkaStreaming.AssemblyInfoInputs.cache
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\obj\Debug\net10.0\KiranaHub.KafkaStreaming.AssemblyInfo.cs
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\obj\Debug\net10.0\KiranaHub.KafkaStreaming.csproj.CoreCompileInputs.cache
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\obj\Debug\net10.0\KiranaHub.KafkaStreaming.dll
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\obj\Debug\net10.0\refint\KiranaHub.KafkaStreaming.dll
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\obj\Debug\net10.0\KiranaHub.KafkaStreaming.pdb
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\obj\Debug\net10.0\KiranaHub.KafkaStreaming.genruntimeconfig.cache
+d:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\obj\Debug\net10.0\ref\KiranaHub.KafkaStreaming.dll
+D:\ToLearn_Antigravity\28-Kafka-StreamProcessing-And-FraudDetection\obj\Debug\net10.0\KiranaHub.KafkaStreaming.sourcelink.json

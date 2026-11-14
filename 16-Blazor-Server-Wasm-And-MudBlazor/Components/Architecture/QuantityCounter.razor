@@ -1,0 +1,76 @@
+@*
+    =========================================================================================
+    [TOPIC]: Blazor Two-Way Data Binding Pattern (@bind-Value)
+    [PURPOSE]: Educational component demonstrating EventCallback<T> synchronization with parents.
+    =========================================================================================
+*@
+
+@* [KYA KARTA HAI]: Flex container jo minus button, current value badge, aur plus button ko align karta hai. *@
+<div class="d-inline-flex align-items-center border rounded-pill px-2 py-1 bg-light">
+    @* [KYA KARTA HAI]: Decrement button jo minimum value tak count ghatata hai. *@
+    <button type="button" 
+            class="btn btn-sm btn-outline-secondary rounded-circle" 
+            style="width: 28px; height: 28px; padding: 0; line-height: 1;"
+            disabled="@(Value <= Min)"
+            @onclick="DecrementAsync">
+        -
+    </button>
+
+    @* [KYA KARTA HAI]: Current quantity count span tag me display karta hai. *@
+    <span class="mx-3 fw-bold text-dark" style="min-width: 20px; text-align: center;">
+        @Value
+    </span>
+
+    @* [KYA KARTA HAI]: Increment button jo maximum value tak count badhata hai. *@
+    <button type="button" 
+            class="btn btn-sm btn-outline-primary rounded-circle" 
+            style="width: 28px; height: 28px; padding: 0; line-height: 1;"
+            disabled="@(Value >= Max)"
+            @onclick="IncrementAsync">
+        +
+    </button>
+</div>
+
+@code {
+    // [KYA KARTA HAI]: Parent component se bound current value receive karta hai.
+    // [KYU ZAROORI HAI]: Two-way binding ka incoming getter parameter.
+    [Parameter]
+    public int Value { get; set; }
+
+    // [KYA KARTA HAI]: Two-way binding ka matching EventCallback naming convention: <PropertyName>Changed.
+    // [KYU ZAROORI HAI]: Blazor framework @bind-Value syntax ko internally ValueChanged callback se wire karta hai!
+    // [KAISE CHALTA HAI]: Jab ye callback invoke hota hai, parent component ka bound variable automatically update ho jata hai aur parent re-render hota hai.
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    // [KYA KARTA HAI]: Minimum allowed quantity constraint (default 1).
+    [Parameter]
+    public int Min { get; set; } = 1;
+
+    // [KYA KARTA HAI]: Maximum allowed quantity constraint (default 99).
+    [Parameter]
+    public int Max { get; set; } = 99;
+
+    // [KYA KARTA HAI]: Plus button click handler jo value increment karta hai.
+    private async Task IncrementAsync()
+    {
+        // [KYA KARTA HAI]: Boundary check karta hai before incrementing.
+        if (Value < Max)
+        {
+            // [KYA KARTA HAI]: Parent ko naya incremented value notify karta hai.
+            await ValueChanged.InvokeAsync(Value + 1);
+        }
+    }
+
+    // [KYA KARTA HAI]: Minus button click handler jo value decrement karta hai.
+    private async Task DecrementAsync()
+    {
+        // [KYA KARTA HAI]: Boundary check karta hai.
+        if (Value > Min)
+        {
+            // [KYA KARTA HAI]: Parent ko decremented value notify karta hai.
+            await ValueChanged.InvokeAsync(Value - 1);
+        }
+    }
+}
+

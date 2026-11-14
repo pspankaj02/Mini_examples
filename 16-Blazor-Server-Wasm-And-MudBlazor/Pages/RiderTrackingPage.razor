@@ -1,0 +1,153 @@
+@page "/tracking"
+@using MudBlazor
+
+@*
+    =========================================================================================
+    [TOPIC]: MudBlazor Real-Time Delivery Tracking Page (MudTimeline)
+    [PURPOSE]: Visualizes order fulfillment states and simulated WebSocket rider progression.
+    =========================================================================================
+*@
+
+<div class="mb-4">
+    <MudText Typo="Typo.h4" Class="font-weight-bold mb-1">
+        Live Grocery Delivery Tracking
+    </MudText>
+    <MudText Typo="Typo.body2" Class="text-muted">
+        Real-time telemetry showing fulfillment stages from dark store to your doorstep.
+    </MudText>
+</div>
+
+<MudGrid>
+    <MudItem xs="12" md="7">
+        <MudCard Elevation="2" Class="pa-4 rounded-lg">
+            <div class="d-flex justify-space-between align-center mb-3">
+                <div>
+                    <MudText Typo="Typo.h6" Class="font-weight-bold">Order #ORD-78921</MudText>
+                    <MudText Typo="Typo.caption" Class="text-muted">Estimated Delivery in: <strong class="text-success">@_estimatedMinutes mins</strong></MudText>
+                </div>
+                <MudChip T="string" Color="Color.Success" Size="Size.Small">On Schedule</MudChip>
+            </div>
+
+            <MudProgressLinear Color="Color.Success" Value="@_progressPercentage" Class="my-4" />
+
+            @* --- MUDTIMELINE PROGRESSION --- *@
+            <MudTimeline TimelineOrientation="TimelineOrientation.Vertical" TimelinePosition="TimelinePosition.Start">
+                
+                @* Step 1: Order Placed *@
+                <MudTimelineItem Color="Color.Success" Size="Size.Medium" Icon="@Icons.Material.Filled.Check">
+                    <ItemContent>
+                        <MudText Typo="Typo.subtitle2" Class="font-weight-bold">Order Received & Payment Confirmed</MudText>
+                        <MudText Typo="Typo.caption" Class="text-muted">Payment of ₹245.00 authorized via UPI intent.</MudText>
+                    </ItemContent>
+                </MudTimelineItem>
+
+                @* Step 2: Dark Store Packing *@
+                <MudTimelineItem Color="@(_currentStage >= 2 ? Color.Success : Color.Default)" 
+                                 Size="Size.Medium" 
+                                 Icon="@(_currentStage >= 2 ? Icons.Material.Filled.Inventory2 : Icons.Material.Outlined.Inventory2)">
+                    <ItemContent>
+                        <MudText Typo="Typo.subtitle2" Class="font-weight-bold">Packed at Dark Store #14 (Koramangala)</MudText>
+                        <MudText Typo="Typo.caption" Class="text-muted">Cold-chain insulated bag sealed by store picker.</MudText>
+                    </ItemContent>
+                </MudTimelineItem>
+
+                @* Step 3: Out for Delivery *@
+                <MudTimelineItem Color="@(_currentStage >= 3 ? Color.Warning : Color.Default)" 
+                                 Size="Size.Medium" 
+                                 Icon="@(_currentStage >= 3 ? Icons.Material.Filled.TwoWheeler : Icons.Material.Outlined.TwoWheeler)">
+                    <ItemContent>
+                        <MudText Typo="Typo.subtitle2" Class="font-weight-bold">Rider on the Way (Pankaj Kumar)</MudText>
+                        <MudText Typo="Typo.caption" Class="text-muted">
+                            GPS Coordinates: <span class="font-monospace">(@_currentLat.ToString("F4"), @_currentLon.ToString("F4"))</span>
+                        </MudText>
+                    </ItemContent>
+                </MudTimelineItem>
+
+                @* Step 4: Delivered *@
+                <MudTimelineItem Color="@(_currentStage >= 4 ? Color.Success : Color.Default)" 
+                                 Size="Size.Medium" 
+                                 Icon="@(_currentStage >= 4 ? Icons.Material.Filled.Home : Icons.Material.Outlined.Home)">
+                    <ItemContent>
+                        <MudText Typo="Typo.subtitle2" Class="font-weight-bold">Delivered at Doorstep</MudText>
+                        <MudText Typo="Typo.caption" Class="text-muted">Customer OTP verified.</MudText>
+                    </ItemContent>
+                </MudTimelineItem>
+
+            </MudTimeline>
+
+            <div class="mt-4 d-flex gap-2">
+                <MudButton Variant="Variant.Outlined" 
+                           Color="Color.Primary" 
+                           Size="Size.Small" 
+                           OnClick="AdvanceStage"
+                           Disabled="@(_currentStage >= 4)">
+                    Simulate Next Stage Progression
+                </MudButton>
+                <MudButton Variant="Variant.Text" 
+                           Color="Color.Secondary" 
+                           Size="Size.Small" 
+                           OnClick="ResetSimulation">
+                    Reset
+                </MudButton>
+            </div>
+        </MudCard>
+    </MudItem>
+
+    <MudItem xs="12" md="5">
+        <MudCard Elevation="2" Class="pa-4 rounded-lg">
+            <MudText Typo="Typo.h6" Class="font-weight-bold mb-3">Delivery Partner Details</MudText>
+            
+            <div class="d-flex align-center mb-3">
+                <MudAvatar Color="Color.Primary" Size="Size.Large" Class="mr-3">PK</MudAvatar>
+                <div>
+                    <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Pankaj Kumar</MudText>
+                    <div class="d-flex align-center">
+                        <MudIcon Icon="@Icons.Material.Filled.Star" Color="Color.Warning" Size="Size.Small" />
+                        <MudText Typo="Typo.caption" Class="ml-1 font-weight-bold">4.92</MudText>
+                        <MudText Typo="Typo.caption" Class="ml-1 text-muted">(2,410 deliveries)</MudText>
+                    </div>
+                </div>
+            </div>
+
+            <MudDivider Class="my-3" />
+
+            <MudText Typo="Typo.subtitle2" Class="font-weight-bold mb-1">Items in this Delivery:</MudText>
+            <ul class="text-muted small mb-3">
+                <li>1x Amul Fresh Cow Milk 500ml (₹33)</li>
+                <li>1x Aashirvaad Shudh Chakki Atta 5kg (₹245)</li>
+            </ul>
+
+            <MudAlert Severity="Severity.Success" Dense="true" Class="mt-2">
+                Temperature monitored: <strong>3.8°C</strong> (Safe cold-chain storage)
+            </MudAlert>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private int _currentStage = 3; // Out for Delivery
+    private int _progressPercentage => _currentStage * 25;
+    private int _estimatedMinutes = 6;
+    private double _currentLat = 12.9352;
+    private double _currentLon = 77.6245;
+
+    private void AdvanceStage()
+    {
+        if (_currentStage < 4)
+        {
+            _currentStage++;
+            _estimatedMinutes = Math.Max(0, _estimatedMinutes - 3);
+            _currentLat += 0.0020;
+            _currentLon += 0.0015;
+        }
+    }
+
+    private void ResetSimulation()
+    {
+        _currentStage = 1;
+        _estimatedMinutes = 10;
+        _currentLat = 12.9300;
+        _currentLon = 77.6200;
+    }
+}
+

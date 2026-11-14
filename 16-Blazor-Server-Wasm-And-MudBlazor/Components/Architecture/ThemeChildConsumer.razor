@@ -1,0 +1,26 @@
+@*
+    =========================================================================================
+    [TOPIC]: Cascading Parameter Consumer
+    [PURPOSE]: Consumes ambient parent state via [CascadingParameter] attribute.
+    =========================================================================================
+*@
+
+<div class="p-2 border border-dashed rounded mt-2">
+    <p class="mb-1 small">
+        Child Component reading ambient theme: 
+        <strong style="color: @(Theme?.PrimaryColor ?? "inherit")">
+            @(Theme?.IsDark == true ? "Dark Mode Active" : "Light Mode Active")
+        </strong>
+    </p>
+    <span class="badge" style="background-color: @(Theme?.PrimaryColor ?? "#10B981"); color: white;">
+        Primary: @(Theme?.PrimaryColor)
+    </span>
+</div>
+
+@code {
+    // [KYA KARTA HAI]: Ancestor component se CascadingValue resolve karta hai without explicit property binding.
+    // [KYU ZAROORI HAI]: Authentication state, User profile, aur Themes access karne ke liye standard pattern.
+    [CascadingParameter]
+    public KiranaThemeCascade.StoreThemeConfig? Theme { get; set; }
+}
+

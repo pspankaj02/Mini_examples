@@ -1,0 +1,260 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "KiranaHub.RealTimeAndJobs/1.0.0": {
+        "dependencies": {
+          "Hangfire.AspNetCore": "1.8.17",
+          "Hangfire.MemoryStorage": "1.8.1.1",
+          "Microsoft.AspNetCore.SignalR.Client": "9.0.2",
+          "Quartz.Extensions.Hosting": "3.13.1"
+        },
+        "runtime": {
+          "KiranaHub.RealTimeAndJobs.dll": {}
+        }
+      },
+      "Hangfire.AspNetCore/1.8.17": {
+        "dependencies": {
+          "Hangfire.NetCore": "1.8.17"
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/Hangfire.AspNetCore.dll": {
+            "assemblyVersion": "1.8.17.0",
+            "fileVersion": "1.8.17.0"
+          }
+        }
+      },
+      "Hangfire.Core/1.8.17": {
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Hangfire.Core.dll": {
+            "assemblyVersion": "1.8.17.0",
+            "fileVersion": "1.8.17.0"
+          }
+        },
+        "resources": {
+          "lib/netstandard2.0/ca/Hangfire.Core.resources.dll": {
+            "locale": "ca"
+          },
+          "lib/netstandard2.0/de/Hangfire.Core.resources.dll": {
+            "locale": "de"
+          },
+          "lib/netstandard2.0/es/Hangfire.Core.resources.dll": {
+            "locale": "es"
+          },
+          "lib/netstandard2.0/fa/Hangfire.Core.resources.dll": {
+            "locale": "fa"
+          },
+          "lib/netstandard2.0/fr/Hangfire.Core.resources.dll": {
+            "locale": "fr"
+          },
+          "lib/netstandard2.0/nb/Hangfire.Core.resources.dll": {
+            "locale": "nb"
+          },
+          "lib/netstandard2.0/nl/Hangfire.Core.resources.dll": {
+            "locale": "nl"
+          },
+          "lib/netstandard2.0/pt-BR/Hangfire.Core.resources.dll": {
+            "locale": "pt-BR"
+          },
+          "lib/netstandard2.0/pt-PT/Hangfire.Core.resources.dll": {
+            "locale": "pt-PT"
+          },
+          "lib/netstandard2.0/pt/Hangfire.Core.resources.dll": {
+            "locale": "pt"
+          },
+          "lib/netstandard2.0/sv/Hangfire.Core.resources.dll": {
+            "locale": "sv"
+          },
+          "lib/netstandard2.0/tr-TR/Hangfire.Core.resources.dll": {
+            "locale": "tr-TR"
+          },
+          "lib/netstandard2.0/zh-TW/Hangfire.Core.resources.dll": {
+            "locale": "zh-TW"
+          },
+          "lib/netstandard2.0/zh/Hangfire.Core.resources.dll": {
+            "locale": "zh"
+          }
+        }
+      },
+      "Hangfire.MemoryStorage/1.8.1.1": {
+        "dependencies": {
+          "Hangfire.Core": "1.8.17"
+        },
+        "runtime": {
+          "lib/netstandard1.3/Hangfire.MemoryStorage.dll": {
+            "assemblyVersion": "1.8.1.0",
+            "fileVersion": "1.8.1.0"
+          }
+        }
+      },
+      "Hangfire.NetCore/1.8.17": {
+        "dependencies": {
+          "Hangfire.Core": "1.8.17"
+        },
+        "runtime": {
+          "lib/netstandard2.1/Hangfire.NetCore.dll": {
+            "assemblyVersion": "1.8.17.0",
+            "fileVersion": "1.8.17.0"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Http.Connections.Client/9.0.2": {
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Http.Connections.Client.dll": {
+            "assemblyVersion": "9.0.2.0",
+            "fileVersion": "9.0.225.6704"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.SignalR.Client/9.0.2": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Connections.Client": "9.0.2",
+          "Microsoft.AspNetCore.SignalR.Client.Core": "9.0.2"
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.SignalR.Client.dll": {
+            "assemblyVersion": "9.0.2.0",
+            "fileVersion": "9.0.225.6704"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.SignalR.Client.Core/9.0.2": {
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.SignalR.Client.Core.dll": {
+            "assemblyVersion": "9.0.2.0",
+            "fileVersion": "9.0.225.6704"
+          }
+        }
+      },
+      "Newtonsoft.Json/11.0.1": {
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.1.21818"
+          }
+        }
+      },
+      "Quartz/3.13.1": {
+        "runtime": {
+          "lib/net6.0/Quartz.dll": {
+            "assemblyVersion": "3.13.1.0",
+            "fileVersion": "3.13.1.0"
+          }
+        }
+      },
+      "Quartz.Extensions.DependencyInjection/3.13.1": {
+        "dependencies": {
+          "Quartz": "3.13.1"
+        },
+        "runtime": {
+          "lib/net8.0/Quartz.Extensions.DependencyInjection.dll": {
+            "assemblyVersion": "3.13.1.0",
+            "fileVersion": "3.13.1.0"
+          }
+        }
+      },
+      "Quartz.Extensions.Hosting/3.13.1": {
+        "dependencies": {
+          "Quartz.Extensions.DependencyInjection": "3.13.1"
+        },
+        "runtime": {
+          "lib/net8.0/Quartz.Extensions.Hosting.dll": {
+            "assemblyVersion": "3.13.1.0",
+            "fileVersion": "3.13.1.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "KiranaHub.RealTimeAndJobs/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Hangfire.AspNetCore/1.8.17": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6sFVmIySXX4n8GDrXYRxlXdFzsF6H+q5WPeDDBIQ2qiGDIEzMQvO8P01s3Kq9rRL3YwPuwjhrVcLI6c+ESIVig==",
+      "path": "hangfire.aspnetcore/1.8.17",
+      "hashPath": "hangfire.aspnetcore.1.8.17.nupkg.sha512"
+    },
+    "Hangfire.Core/1.8.17": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PJbESth45US95kcFn3P2xd//l5C34YPskcU9q/mdIutVcYbd2kvsZDBFmz0/HYxa0nrocdjSpO6MGwPU4kE8Pw==",
+      "path": "hangfire.core/1.8.17",
+      "hashPath": "hangfire.core.1.8.17.nupkg.sha512"
+    },
+    "Hangfire.MemoryStorage/1.8.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qXq7rr2c4UoX5aFZcji817RPTzNR/hX4T27jhp7YNYcGiGNsyi2bjp+yX9AhICQlyrm4/W7YDGgm/mxVkeEAng==",
+      "path": "hangfire.memorystorage/1.8.1.1",
+      "hashPath": "hangfire.memorystorage.1.8.1.1.nupkg.sha512"
+    },
+    "Hangfire.NetCore/1.8.17": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-COFpdp1JOMj9gd76NObq0ejZv0UAfpa6d3uKdtc96+NT/PhjXVOT5im2Mff3jqBdwEcQodw2xS8oFUs863clvw==",
+      "path": "hangfire.netcore/1.8.17",
+      "hashPath": "hangfire.netcore.1.8.17.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Http.Connections.Client/9.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-/X17FM0SO/V87MjyKTKzJHUoEti9E2sZUxN+ujVaYm990NXlKVp/b/KniNQgIV04yLcmRQV1LwJSj3D4vzo37Q==",
+      "path": "microsoft.aspnetcore.http.connections.client/9.0.2",
+      "hashPath": "microsoft.aspnetcore.http.connections.client.9.0.2.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.SignalR.Client/9.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-y5Jp04e85d/VfbjOmJMrIyWALDAy2PEvkVuFBZrYCCVU/VBfdllXL6YItXFZy2JFv/0+BmMxMh8D2XXz9bMBWg==",
+      "path": "microsoft.aspnetcore.signalr.client/9.0.2",
+      "hashPath": "microsoft.aspnetcore.signalr.client.9.0.2.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.SignalR.Client.Core/9.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-3QZ2S6iAVl7pSS042C30Cexf+SH+UAA2fe07mhZk3luf+h3uqWqRprPw3XMEL8Jwr2+WJKAhyTRan4dEdBftzw==",
+      "path": "microsoft.aspnetcore.signalr.client.core/9.0.2",
+      "hashPath": "microsoft.aspnetcore.signalr.client.core.9.0.2.nupkg.sha512"
+    },
+    "Newtonsoft.Json/11.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pNN4l+J6LlpIvHOeNdXlwxv39NPJ2B5klz+Rd2UQZIx30Squ5oND1Yy3wEAUoKn0GPUj6Yxt9lxlYWQqfZcvKg==",
+      "path": "newtonsoft.json/11.0.1",
+      "hashPath": "newtonsoft.json.11.0.1.nupkg.sha512"
+    },
+    "Quartz/3.13.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-0S4/gYb/FRQfek65OPAmszbdEmtc4Fq/jSeA5XFnvMIjYL9Zr8g9jWoKneEFzAFJGlESjFULtaUFzValHvqu4A==",
+      "path": "quartz/3.13.1",
+      "hashPath": "quartz.3.13.1.nupkg.sha512"
+    },
+    "Quartz.Extensions.DependencyInjection/3.13.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-I3uXVIYMEo00TrEzzHG3koWNTGdinPGjvgBWse7SqMt3ZW7qlKBXB4a5bJsxkKSMjAs4i2Ykx2cJSi/r6zhiCw==",
+      "path": "quartz.extensions.dependencyinjection/3.13.1",
+      "hashPath": "quartz.extensions.dependencyinjection.3.13.1.nupkg.sha512"
+    },
+    "Quartz.Extensions.Hosting/3.13.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pwGofFs0VoIwq8JFXBEeEKFrA/6wJDFekLzQA5oev7+Ow0+lqBlZlzBpPd10hkgVAItL+uZ2SEjP8Ual3QZTww==",
+      "path": "quartz.extensions.hosting/3.13.1",
+      "hashPath": "quartz.extensions.hosting.3.13.1.nupkg.sha512"
+    }
+  }
+}

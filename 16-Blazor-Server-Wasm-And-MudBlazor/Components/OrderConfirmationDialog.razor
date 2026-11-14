@@ -1,0 +1,119 @@
+@using KiranaHub.BlazorStore.Models
+@using KiranaHub.BlazorStore.Services
+@using MudBlazor
+
+@*
+    =========================================================================================
+    [TOPIC]: MudBlazor Modal Dialog (MudDialog)
+    [PURPOSE]: Checkout confirmation dialog capturing delivery address and payment choice.
+    =========================================================================================
+*@
+
+@inject ICartStateService CartState
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.LocalShipping" Class="mr-2" />
+            Confirm Grocery Delivery
+        </MudText>
+    </TitleContent>
+
+    <DialogContent>
+        <MudText Typo="Typo.body2" Class="mb-3 text-muted">
+            Review your order details and confirm delivery address to proceed with instant fulfillment.
+        </MudText>
+
+        @* [KYA KARTA HAI]: Order total summary card render karta hai. *@
+        <MudPaper Elevation="0" Class="pa-3 mb-4 rounded-lg" Style="background-color: var(--mud-palette-background-grey);">
+            <div class="d-flex justify-space-between mb-1">
+                <MudText Typo="Typo.body2">Total Items:</MudText>
+                <MudText Typo="Typo.subtitle2">@CartState.TotalItemCount items</MudText>
+            </div>
+            <div class="d-flex justify-space-between mb-1">
+                <MudText Typo="Typo.body2">Subtotal:</MudText>
+                <MudText Typo="Typo.subtitle2">₹@CartState.Subtotal.ToString("N2")</MudText>
+            </div>
+            <div class="d-flex justify-space-between mb-1">
+                <MudText Typo="Typo.body2">Delivery Fee:</MudText>
+                <MudText Typo="Typo.subtitle2" Color="@(CartState.DeliveryFee == 0 ? Color.Success : Color.Default)">
+                    @(CartState.DeliveryFee == 0 ? "FREE" : $"₹{CartState.DeliveryFee:N2}")
+                </MudText>
+            </div>
+            @if (CartState.DiscountAmount > 0)
+            {
+                <div class="d-flex justify-space-between mb-1">
+                    <MudText Typo="Typo.body2" Color="Color.Success">Discount:</MudText>
+                    <MudText Typo="Typo.subtitle2" Color="Color.Success">-₹@CartState.DiscountAmount.ToString("N2")</MudText>
+                </div>
+            }
+            <MudDivider Class="my-2" />
+            <div class="d-flex justify-space-between">
+                <MudText Typo="Typo.subtitle1" Class="font-weight-bold">Payable Amount:</MudText>
+                <MudText Typo="Typo.subtitle1" Color="Color.Primary" Class="font-weight-bold">₹@CartState.GrandTotal.ToString("N2")</MudText>
+            </div>
+        </MudPaper>
+
+        @* [KYA KARTA HAI]: Customer name textfield. *@
+        <MudTextField @bind-Value="_customerName" 
+                      Label="Customer Full Name" 
+                      Variant="Variant.Outlined" 
+                      Margin="Margin.Dense" 
+                      Class="mb-3" />
+
+        @* [KYA KARTA HAI]: Delivery address textfield. *@
+        <MudTextField @bind-Value="_deliveryAddress" 
+                      Label="Delivery Address (Flat / House / Street)" 
+                      Variant="Variant.Outlined" 
+                      Lines="2" 
+                      Margin="Margin.Dense" 
+                      Class="mb-3" />
+
+        @* [KYA KARTA HAI]: Payment mode radio group. *@
+        <MudRadioGroup @bind-Value="_selectedPaymentMode">
+            <MudRadio Value="@("UPI")" Color="Color.Primary">Instant UPI (GooglePay / PhonePe / Paytm)</MudRadio>
+            <MudRadio Value="@("Cash")" Color="Color.Secondary">Cash on Delivery (Pay at Doorstep)</MudRadio>
+            <MudRadio Value="@("Card")" Color="Color.Info">Credit / Debit Card</MudRadio>
+        </MudRadioGroup>
+    </DialogContent>
+
+    <DialogActions>
+        <MudButton OnClick="Cancel" Variant="Variant.Text">Cancel</MudButton>
+        <MudButton Color="Color.Success" 
+                   Variant="Variant.Filled" 
+                   OnClick="SubmitOrder" 
+                   Disabled="@(string.IsNullOrWhiteSpace(_customerName) || string.IsNullOrWhiteSpace(_deliveryAddress))">
+            Place Order Now
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    // [KYA KARTA HAI]: MudDialog instance injected by dialog service.
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    private string _customerName = "Pankaj Sharma";
+    private string _deliveryAddress = "Flat 402, Lotus Towers, Koramangala, Bengaluru - 560034";
+    private string _selectedPaymentMode = "UPI";
+
+    // [KYA KARTA HAI]: Dialog cancel handler.
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    // [KYA KARTA HAI]: Order placement submit handler.
+    private void SubmitOrder()
+    {
+        string generatedOrderId = $"ORD-{Guid.NewGuid().ToString("N")[..8].ToUpper()}";
+        
+        // [KYA KARTA HAI]: Cart empty karta hai.
+        CartState.ClearCart();
+
+        // [KYA KARTA HAI]: Dialog close karta hai with success result and order ID.
+        MudDialog.Close(DialogResult.Ok(generatedOrderId));
+    }
+}
+

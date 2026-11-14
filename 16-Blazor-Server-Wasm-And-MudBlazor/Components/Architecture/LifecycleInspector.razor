@@ -1,0 +1,134 @@
+@*
+    =========================================================================================
+    [TOPIC]: Blazor Component Lifecycle Methods
+    [PURPOSE]: Visual interactive inspector logging execution order of all 6 lifecycle events.
+    =========================================================================================
+*@
+
+@implements IDisposable
+
+<div class="card border-primary shadow-sm mb-4">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h6 class="mb-0 fw-bold">Blazor Component Lifecycle Inspector</h6>
+        <span class="badge bg-light text-primary">Component State: Active</span>
+    </div>
+    <div class="card-body">
+        <p class="text-muted small">
+            Parent Parameter <strong>InspectionCounter:</strong> <span class="badge bg-secondary">@ExternalCounter</span>
+        </p>
+
+        <div class="d-flex gap-2 mb-3">
+            <button class="btn btn-sm btn-outline-primary" @onclick="ForceComponentRerender">
+                Trigger StateHasChanged()
+            </button>
+            <button class="btn btn-sm btn-outline-danger" @onclick="ClearAuditLog">
+                Clear Execution Log
+            </button>
+        </div>
+
+        <h6 class="fw-bold small text-uppercase text-secondary">Lifecycle Execution Order Log:</h6>
+        <div class="bg-dark text-light p-3 rounded font-monospace small" style="max-height: 220px; overflow-y: auto;">
+            @if (_lifecycleLogs.Count == 0)
+            {
+                <span class="text-muted">No lifecycle events recorded yet.</span>
+            }
+            else
+            {
+                @foreach (var log in _lifecycleLogs)
+                {
+                    <div>@log</div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    // [KYA KARTA HAI]: Parent se incoming parameter.
+    [Parameter]
+    public int ExternalCounter { get; set; }
+
+    // [KYA KARTA HAI]: Lifecycle execution steps store karne ke liye audit log list.
+    private readonly List<string> _lifecycleLogs = new();
+
+    // -------------------------------------------------------------------------------------
+    // 1. SET PARAMETERS ASYNC
+    // -------------------------------------------------------------------------------------
+    // [KYA KARTA HAI]: Lifecycle ka sabse pehla method jab parent parameters provide karta hai.
+    // [KYU ZAROORI HAI]: Low-level parameter interception aur conditional parameter processing.
+    public override async Task SetParametersAsync(ParameterView parameters)
+    {
+        _lifecycleLogs.Add($"[1. SetParametersAsync] Received {parameters.ToDictionary().Count} parameters from parent.");
+        await base.SetParametersAsync(parameters);
+    }
+
+    // -------------------------------------------------------------------------------------
+    // 2. ON INITIALIZED & ON INITIALIZED ASYNC
+    // -------------------------------------------------------------------------------------
+    // [KYA KARTA HAI]: Component create hone par process lifetime me SIRF EK BAAR run hota hai.
+    // [KYU ZAROORI HAI]: HTTP API calls se initial data fetch karna aur dependency setup karna.
+    protected override async Task OnInitializedAsync()
+    {
+        _lifecycleLogs.Add("[2. OnInitializedAsync] Component instantiated and initial state initialized.");
+        await Task.CompletedTask;
+    }
+
+    // -------------------------------------------------------------------------------------
+    // 3. ON PARAMETERS SET & ON PARAMETERS SET ASYNC
+    // -------------------------------------------------------------------------------------
+    // [KYA KARTA HAI]: Initial parameters set hone ke baad AUR jab bhi parent parameters change kare tab run hota hai.
+    // [KYU ZAROORI HAI]: Dependent calculations refresh karna jab parameters mutate hon.
+    protected override async Task OnParametersSetAsync()
+    {
+        _lifecycleLogs.Add($"[3. OnParametersSetAsync] Parameter evaluated: ExternalCounter = {ExternalCounter}");
+        await Task.CompletedTask;
+    }
+
+    // -------------------------------------------------------------------------------------
+    // 4. SHOULD RENDER
+    // -------------------------------------------------------------------------------------
+    // [KYA KARTA HAI]: Blazor ko batata hai ki UI DOM re-render karna hai ya skip karna hai.
+    // [KYU ZAROORI HAI]: Performance optimization: unneeded Virtual DOM diffing pass prevent karna.
+    // [OUTPUT / RETURN]: True to render UI, False to suppress rendering.
+    protected override bool ShouldRender()
+    {
+        _lifecycleLogs.Add("[4. ShouldRender] Evaluated: returning TRUE for UI DOM reconciliation.");
+        return true;
+    }
+
+    // -------------------------------------------------------------------------------------
+    // 5. ON AFTER RENDER & ON AFTER RENDER ASYNC
+    // -------------------------------------------------------------------------------------
+    // [KYA KARTA HAI]: Component ke HTML DOM me successfully paint hone ke baad execute hota hai.
+    // [KYU ZAROORI HAI]: JavaScript Interop (JSInterop) calls, DOM element measurements, aur 3rd-party JS widgets initialize karna.
+    // [NOTE]: firstRender flag true hota hai sirf initial paint par!
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        _lifecycleLogs.Add($"[5. OnAfterRenderAsync] DOM rendered. (firstRender: {firstRender})");
+        await Task.CompletedTask;
+    }
+
+    // -------------------------------------------------------------------------------------
+    // 6. DISPOSE
+    // -------------------------------------------------------------------------------------
+    // [KYA KARTA HAI]: Component DOM se remove/unmount hone par cleanup ke liye run hota hai.
+    // [KYU ZAROORI HAI]: Event subscriptions unsubscribe karna aur memory leak prevent karna.
+    public void Dispose()
+    {
+        _lifecycleLogs.Add("[6. Dispose] Component unmounted. Event handlers detached.");
+    }
+
+    // [KYA KARTA HAI]: Manual re-render trigger button.
+    private void ForceComponentRerender()
+    {
+        _lifecycleLogs.Add("--> User manually called StateHasChanged()");
+        StateHasChanged();
+    }
+
+    // [KYA KARTA HAI]: Log clear helper.
+    private void ClearAuditLog()
+    {
+        _lifecycleLogs.Clear();
+    }
+}
+

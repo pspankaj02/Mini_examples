@@ -1,0 +1,129 @@
+@page "/architecture"
+@using KiranaHub.BlazorStore.Components.Architecture
+@using KiranaHub.BlazorStore.Models
+@using KiranaHub.BlazorStore.Services
+@using MudBlazor
+
+@*
+    =========================================================================================
+    [TOPIC]: Blazor Component Architecture Deep-Dive Page
+    [PURPOSE]: Hands-on demonstration of Two-Way Binding, RenderFragments, and Lifecycle.
+    =========================================================================================
+*@
+
+@inject ICatalogService CatalogService
+
+<div class="mb-4">
+    <MudText Typo="Typo.h4" Class="font-weight-bold mb-1">
+        Blazor Component Architecture
+    </MudText>
+    <MudText Typo="Typo.body2" Class="text-muted">
+        Mastering Two-Way Binding, Generic Templated Components (RenderFragment), and Lifecycle Hooks.
+    </MudText>
+</div>
+
+<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-4">
+    
+    @* --- TAB 1: TWO-WAY DATA BINDING --- *@
+    <MudTabPanel Text="1. Two-Way Binding (@@bind-Value)" Icon="@Icons.Material.Filled.SyncAlt">
+        <MudCard Class="mb-4">
+            <MudCardContent>
+                <MudText Typo="Typo.h6" Class="mb-2">Two-Way Binding Pattern Demonstration</MudText>
+                <MudText Typo="Typo.body2" Class="text-muted mb-3">
+                    In Blazor, two-way binding is implemented using a matching pair of parameters:
+                    <code>[Parameter] public int Value</code> and <code>[Parameter] public EventCallback&lt;int&gt; ValueChanged</code>.
+                </MudText>
+
+                <div class="p-3 bg-light rounded d-flex align-items-center gap-4 mb-3">
+                    <div>
+                        <span class="small text-muted d-block mb-1">Custom Child Component:</span>
+                        <QuantityCounter @bind-Value="_counterValue" Min="1" Max="20" />
+                    </div>
+
+                    <div>
+                        <span class="small text-muted d-block mb-1">Parent Component State:</span>
+                        <MudChip T="string" Color="Color.Primary" Size="Size.Medium">
+                            _counterValue in Parent = @_counterValue
+                        </MudChip>
+                    </div>
+                </div>
+
+                <MudAlert Severity="Severity.Info" Dense="true">
+                    Notice how clicking the plus/minus buttons inside <code>QuantityCounter</code> immediately updates the parent state without manual event plumbing!
+                </MudAlert>
+            </MudCardContent>
+        </MudCard>
+    </MudTabPanel>
+
+    @* --- TAB 2: TEMPLATED COMPONENTS (RENDERFRAGMENTS) --- *@
+    <MudTabPanel Text="2. Generic Templated Grid" Icon="@Icons.Material.Filled.TableChart">
+        <MudCard Class="mb-4">
+            <MudCardContent>
+                <MudText Typo="Typo.h6" Class="mb-2">Generic RenderFragment&lt;TItem&gt; Pattern</MudText>
+                <MudText Typo="Typo.body2" Class="text-muted mb-3">
+                    <code>TemplatedGroceryGrid&lt;TItem&gt;</code> uses <code>RenderFragment&lt;TItem&gt; RowTemplate</code> to allow the caller to define custom HTML layout per row.
+                </MudText>
+
+                <TemplatedGroceryGrid Items="_demoItems">
+                    <HeaderTemplate>
+                        <tr>
+                            <th>SKU</th>
+                            <th>Product Name</th>
+                            <th>Category</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                        </tr>
+                    </HeaderTemplate>
+                    <RowTemplate Context="product">
+                        <tr>
+                            <td><span class="badge bg-secondary font-monospace">@product.Sku</span></td>
+                            <td class="fw-bold">@product.Name</td>
+                            <td><span class="badge bg-info text-dark">@product.Category</span></td>
+                            <td class="text-success fw-bold">₹@product.Price.ToString("N2")</td>
+                            <td>
+                                @if (product.Stock > 0)
+                                {
+                                    <span class="badge bg-success">@product.Stock In Stock</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger">Out of Stock</span>
+                                }
+                            </td>
+                        </tr>
+                    </RowTemplate>
+                </TemplatedGroceryGrid>
+            </MudCardContent>
+        </MudCard>
+    </MudTabPanel>
+
+    @* --- TAB 3: COMPONENT LIFECYCLE HOOKS --- *@
+    <MudTabPanel Text="3. Component Lifecycle Inspector" Icon="@Icons.Material.Filled.History">
+        <div class="mb-3 d-flex align-items-center gap-3">
+            <button class="btn btn-sm btn-primary" @onclick="@(() => _lifecycleTrigger++)">
+                Increment Parent Trigger (Current: @_lifecycleTrigger)
+            </button>
+            <span class="text-muted small">Passing updated parameters forces SetParametersAsync & OnParametersSetAsync!</span>
+        </div>
+
+        <LifecycleInspector ExternalCounter="@_lifecycleTrigger" />
+    </MudTabPanel>
+
+    @* --- TAB 4: CASCADING VALUES & PARAMETERS --- *@
+    <MudTabPanel Text="4. Cascading Values" Icon="@Icons.Material.Filled.Layers">
+        <KiranaThemeCascade />
+    </MudTabPanel>
+
+</MudTabs>
+
+@code {
+    private int _counterValue = 3;
+    private int _lifecycleTrigger = 100;
+    private IReadOnlyList<GroceryItem> _demoItems = Array.Empty<GroceryItem>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var all = await CatalogService.GetProductsAsync();
+        _demoItems = all.Take(4).ToList();
+    }
+}

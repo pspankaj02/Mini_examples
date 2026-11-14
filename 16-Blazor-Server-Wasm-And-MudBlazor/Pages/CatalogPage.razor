@@ -1,0 +1,173 @@
+@page "/"
+@page "/catalog"
+@using KiranaHub.BlazorStore.Models
+@using KiranaHub.BlazorStore.Services
+@using MudBlazor
+
+@*
+    =========================================================================================
+    [TOPIC]: MudBlazor Quick-Commerce Storefront Catalog Page
+    [PURPOSE]: Interactive product search, category chip filtering, and instant Add-to-Cart.
+    =========================================================================================
+*@
+
+@inject ICatalogService CatalogService
+@inject ICartStateService CartState
+@inject ISnackbar Snackbar
+
+<div class="mb-4">
+    <MudText Typo="Typo.h4" Class="font-weight-bold mb-1">
+        Fresh Groceries in <span style="color: #10B981;">10 Minutes</span>
+    </MudText>
+    <MudText Typo="Typo.body2" Class="text-muted">
+        Direct from local dark stores to your doorstep with cold-chain quality assurance.
+    </MudText>
+</div>
+
+@* --- SEARCH & FILTER CONTROLS --- *@
+<MudPaper Elevation="1" Class="pa-4 mb-4 rounded-lg">
+    <MudGrid Class="align-center">
+        <MudItem xs="12" md="6">
+            <MudTextField @bind-Value="_searchQuery" 
+                          Placeholder="Search milk, atta, butter, tea, snacks..." 
+                          Variant="Variant.Outlined" 
+                          Immediate="true"
+                          Adornment="Adornment.Start" 
+                          AdornmentIcon="@Icons.Material.Filled.Search" 
+                          Margin="Margin.Dense" 
+                          Clearable="true" />
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <div class="d-flex align-items-center">
+                <MudText Typo="Typo.body2" Class="mr-2 font-weight-bold text-muted">Category:</MudText>
+                <MudChipSet T="string" SelectedValue="_selectedCategory" SelectedValueChanged="OnCategoryChanged" CheckMark="true">
+                    <MudChip T="string" Value="@("All")" Color="Color.Primary" Variant="Variant.Filled">All Items</MudChip>
+                    @foreach (var cat in _categories)
+                    {
+                        <MudChip T="string" Value="@cat" Color="Color.Default" Variant="Variant.Outlined">@cat</MudChip>
+                    }
+                </MudChipSet>
+            </div>
+        </MudItem>
+    </MudGrid>
+</MudPaper>
+
+@* --- PRODUCTS GRID --- *@
+@if (_filteredProducts == null)
+{
+    <div class="d-flex justify-center my-5">
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    </div>
+}
+else if (_filteredProducts.Count == 0)
+{
+    <MudPaper Elevation="0" Class="pa-5 text-center my-4">
+        <MudIcon Icon="@Icons.Material.Outlined.SearchOff" Size="Size.Large" Color="Color.Secondary" Class="mb-2" />
+        <MudText Typo="Typo.h6">No grocery products matched "@_searchQuery"</MudText>
+        <MudText Typo="Typo.body2" Class="text-muted">Try searching with a different keyword or select another category.</MudText>
+    </MudPaper>
+}
+else
+{
+    <MudGrid>
+        @foreach (var product in _filteredProducts)
+        {
+            <MudItem xs="12" sm="6" md="4" lg="3" @key="product.Id">
+                <MudCard Elevation="2" Class="rounded-lg h-100 d-flex flex-column justify-space-between">
+                    <MudCardContent>
+                        <div class="d-flex justify-space-between align-start mb-2">
+                            <MudChip T="string" Size="Size.Small" Color="Color.Info" Variant="Variant.Text">
+                                @product.Category
+                            </MudChip>
+
+                            @if (product.Stock <= 0)
+                            {
+                                <MudChip T="string" Size="Size.Small" Color="Color.Error" Variant="Variant.Filled">Out of Stock</MudChip>
+                            }
+                            else if (product.IsPerishable)
+                            {
+                                <MudChip T="string" Size="Size.Small" Color="Color.Warning" Variant="Variant.Filled">Cold Chain</MudChip>
+                            }
+                            else
+                            {
+                                <MudChip T="string" Size="Size.Small" Color="Color.Success" Variant="Variant.Outlined">@product.Stock in stock</MudChip>
+                            }
+                        </div>
+
+                        <MudText Typo="Typo.subtitle1" Class="font-weight-bold mb-1">
+                            @product.Name
+                        </MudText>
+                        <MudText Typo="Typo.caption" Class="text-muted d-block mb-3">
+                            @product.Description
+                        </MudText>
+                    </MudCardContent>
+
+                    <MudCardActions Class="d-flex justify-space-between align-center px-4 pb-3">
+                        <MudText Typo="Typo.h6" Color="Color.Primary" Class="font-weight-bold">
+                            ₹@product.Price.ToString("N2")
+                        </MudText>
+
+                        <MudButton Variant="Variant.Filled" 
+                                   Color="Color.Primary" 
+                                   Size="Size.Small" 
+                                   StartIcon="@Icons.Material.Filled.AddShoppingCart"
+                                   Disabled="@(product.Stock <= 0)"
+                                   OnClick="@(() => AddToCart(product))">
+                            Add
+                        </MudButton>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+}
+
+@code {
+    private IReadOnlyList<GroceryItem> _allProducts = Array.Empty<GroceryItem>();
+    private IReadOnlyList<string> _categories = Array.Empty<string>();
+    private string _searchQuery = string.Empty;
+    private string _selectedCategory = "All";
+
+    // [KYA KARTA HAI]: Real-time filtered products property.
+    private IReadOnlyList<GroceryItem> _filteredProducts
+    {
+        get
+        {
+            var query = _allProducts.AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(_selectedCategory) && _selectedCategory != "All")
+            {
+                query = query.Where(p => p.Category.Equals(_selectedCategory, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrWhiteSpace(_searchQuery))
+            {
+                query = query.Where(p => p.Name.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase)
+                                      || p.Description.Contains(_searchQuery, StringComparison.OrdinalIgnoreCase));
+            }
+
+            return query.ToList();
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _allProducts = await CatalogService.GetProductsAsync();
+        _categories = await CatalogService.GetCategoriesAsync();
+    }
+
+    private void OnCategoryChanged(string category)
+    {
+        _selectedCategory = string.IsNullOrWhiteSpace(category) ? "All" : category;
+    }
+
+    private void AddToCart(GroceryItem product)
+    {
+        CartState.AddItem(product, 1);
+        Snackbar.Add($"Added 1x {product.Name} to cart", Severity.Success, config =>
+        {
+            config.VisibleStateDuration = 1800;
+        });
+    }
+}

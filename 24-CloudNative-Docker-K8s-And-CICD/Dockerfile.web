@@ -1,0 +1,120 @@
+# ==============================================================================================
+# KiranaHub Cloud-Native: Production Multi-Stage Dockerfile for React/Next.js Storefront
+# [KYA KARTA HAI] Node.js development environment se lightweight static/standalone production container banata hai.
+# [KYU ZAROORI HAI] node_modules and devDependencies ko production bundle se bahar nikal kar image size 1GB se 80MB karta hai.
+# [KAISE CHALTA HAI] Dependencies install -> production static build -> Nginx/Node unprivileged minimal runner.
+# [OUTPUT / SIDE EFFECT] High performance, small footprint web container.
+# [VARIATIONS TO TRY] Nginx Alpine reverse proxy vs Node.js standalone server mode.
+# ==============================================================================================
+
+# [KYA KARTA HAI] Base Node.js 22 alpine image declare karta hai dependencies resolution stage ke liye.
+# [KYU ZAROORI HAI] Alpine linux ultra-lightweight hai aur fast package resolution provide karta hai.
+# [KAISE CHALTA HAI] Docker engine alpine based Node 22 environment pull karta hai.
+# [OUTPUT / SIDE EFFECT] Deps stage initialize hoti hai.
+# [VARIATIONS TO TRY] `node:22-slim` agar native glibc libraries ki zaroorat ho.
+FROM node:22-alpine AS deps
+
+# [KYA KARTA HAI] Alpine compatibility libc library install karta hai native modules ke liye.
+# [KYU ZAROORI HAI] Kuch npm modules (jaise esbuild ya canvas) musl libc par direct crash ho sakte hain bina compat layer ke.
+# [KAISE CHALTA HAI] apk package manager libc6-compat binaries install karta hai.
+# [OUTPUT / SIDE EFFECT] Native binary compatibility enable hoti hai.
+# [VARIATIONS TO TRY] Pure JS projects me isse skip kar sakte hain.
+RUN apk add --no-cache libc6-compat
+
+# [KYA KARTA HAI] Container workspace directory `/app` set karta hai.
+# [KYU ZAROORI HAI] Isolation aur predictable file paths ensure karne ke liye.
+# [KAISE CHALTA HAI] Active working directory `/app` set hoti hai.
+# [OUTPUT / SIDE EFFECT] Current dir set to `/app`.
+# [VARIATIONS TO TRY] Custom path `/var/www/kiranahub` use karein.
+WORKDIR /app
+
+# [KYA KARTA HAI] package.json aur package-lock.json copy karta hai.
+# [KYU ZAROORI HAI] Docker layer caching leverage hoti hai — jab tak packages change nahi hote, npm install cache se aayega.
+# [KAISE CHALTA HAI] Host files container ke `/app` folder me stream hoti hain.
+# [OUTPUT / SIDE EFFECT] Manifest files copy ho jati hain.
+# [VARIATIONS TO TRY] pnpm-lock.yaml ya yarn.lock support karein agar custom manager ho.
+COPY 18-React-Web-Connecting-To-WebAPI/package*.json ./
+
+# [KYA KARTA HAI] Clean reproducible npm install run karta hai strictly package-lock ke according.
+# [KYU ZAROORI HAI] `npm ci` lock file ko overwrite nahi hone deta aur deterministic builds guarantee karta hai.
+# [KAISE CHALTA HAI] NPM lockfile ke exact hashes download karke node_modules structure create karta hai.
+# [OUTPUT / SIDE EFFECT] node_modules folder create hota hai.
+# [VARIATIONS TO TRY] `npm ci --omit=optional` run karke OS-specific heavy modules drop karein.
+RUN npm ci
+
+# [KYA KARTA HAI] Production bundle build karne ke liye builder stage initialize karta hai.
+# [KYU ZAROORI HAI] Final production HTML/CSS/JS bundles generate karne ke liye Vite/Next build toolchain chalana hota hai.
+# [KAISE CHALTA HAI] Fresh stage create hota hai jisme source files inject ki jayengi.
+# [OUTPUT / SIDE EFFECT] Builder environment ready.
+# [VARIATIONS TO TRY] Multi-target matrix builds alag-alag staging environments ke liye.
+FROM node:22-alpine AS builder
+
+# [KYA KARTA HAI] Builder workspace path set karta hai.
+# [KYU ZAROORI HAI] Consistent build path ensure karne ke liye.
+# [KAISE CHALTA HAI] Working directory set to `/app`.
+# [OUTPUT / SIDE EFFECT] Dir set to `/app`.
+# [VARIATIONS TO TRY] Custom path set karein.
+WORKDIR /app
+
+# [KYA KARTA HAI] Deps stage se installed node_modules copy karta hai.
+# [KYU ZAROORI HAI] Bar-bar packages install karne ka network latency aur time waste bachata hai.
+# [KAISE CHALTA HAI] Previous stage container layer se `/app/node_modules` current context me copy hota hai.
+# [OUTPUT / SIDE EFFECT] Dependencies ready for build.
+# [VARIATIONS TO TRY] Cached build mount points use karein BuildKit ke sath.
+COPY --from=deps /app/node_modules ./node_modules
+
+# [KYA KARTA HAI] Frontend application ka poora source code copy karta hai.
+# [KYU ZAROORI HAI] Bundler ko React components, CSS, aur static assets transpile karne ke liye source chahiye.
+# [KAISE CHALTA HAI] Host files container workspace me copy hoti hain.
+# [OUTPUT / SIDE EFFECT] Source files present in `/app`.
+# [VARIATIONS TO TRY] `.dockerignore` me local tests aur node_modules ignore karein.
+COPY 18-React-Web-Connecting-To-WebAPI/ .
+
+# [KYA KARTA HAI] Production environment variable inject karta hai.
+# [KYU ZAROORI HAI] React aur bundlers development warnings aur debug trees ko strip off kar dete hain.
+# [KAISE CHALTA HAI] Node environment variable set hota hai.
+# [OUTPUT / SIDE EFFECT] Minified production code generation enabled.
+# [VARIATIONS TO TRY] `VITE_API_BASE_URL` jaise custom runtime configs build argument se pass karein.
+ENV NODE_ENV=production
+
+# [KYA KARTA HAI] Minified, tree-shaken static production bundle build karta hai.
+# [KYU ZAROORI HAI] Maximum compression aur single-page application chunking ke liye.
+# [KAISE CHALTA HAI] Vite compiler TypeScript compile karke CSS extract karta hai aur `/app/dist` me write karta hai.
+# [OUTPUT / SIDE EFFECT] Production distribution artifacts ready in `/app/dist`.
+# [VARIATIONS TO TRY] Source maps generate karein Sentry crash reporting ke liye (`--sourcemap`).
+RUN npm run build
+
+# [KYA KARTA HAI] Final production web server stage lightweight Nginx Alpine se initialize karta hai.
+# [KYU ZAROORI HAI] Static assets serve karne ke liye Node.js runtime ki zaroorat nahi hoti; Nginx 10x faster aur lighter hai.
+# [KAISE CHALTA HAI] Ultra-fast C-based web server image load hoti hai (<25MB size).
+# [OUTPUT / SIDE EFFECT] Production Nginx base image ready.
+# [VARIATIONS TO TRY] Caddy server use karein automatic Let's Encrypt SSL certificates ke liye.
+FROM nginxinc/nginx-unprivileged:alpine AS runner
+
+# [KYA KARTA HAI] Custom Nginx SPA configuration file copy karta hai.
+# [KYU ZAROORI HAI] React Single Page Application (SPA) me client-side routing (`/cart`, `/catalog`) par 404 aane se rokne ke liye.
+# [KAISE CHALTA HAI] Nginx configuration directory me `default.conf` replace hoti hai.
+# [OUTPUT / SIDE EFFECT] Client-side routing rewrite rules configured.
+# [VARIATIONS TO TRY] Gzip compression aur Cache-Control immutable headers enable karein.
+COPY --chown=nginx:nginx 24-CloudNative-Docker-K8s-And-CICD/nginx.conf /etc/nginx/conf.d/default.conf
+
+# [KYA KARTA HAI] Builder stage se compiled static files Nginx public webroot me copy karta hai.
+# [KYU ZAROORI HAI] Nginx inhi files ko direct HTTP clients ko serve karega with zero CPU overhead.
+# [KAISE CHALTA HAI] `/app/dist` folder se files `/usr/share/nginx/html` me inject hoti hain.
+# [OUTPUT / SIDE EFFECT] HTML, JS, CSS, and SVG assets available for web serving.
+# [VARIATIONS TO TRY] Brotli compressed pre-rendered files copy karein.
+COPY --from=builder --chown=nginx:nginx /app/dist /usr/share/nginx/html
+
+# [KYA KARTA HAI] Unprivileged standard non-root port 8080 expose karta hai.
+# [KYU ZAROORI HAI] Non-root container security standard follow karta hai.
+# [KAISE CHALTA HAI] Container port metadata declare hota hai.
+# [OUTPUT / SIDE EFFECT] Port 8080 exposed.
+# [VARIATIONS TO TRY] Custom internal port jaise 3000 expose karein.
+EXPOSE 8080
+
+# [KYA KARTA HAI] Nginx web server ko foreground mode me launch karta hai.
+# [KYU ZAROORI HAI] Container lifecycle ko active rakhne ke liye main process (PID 1) ko daemonize hone se rokna padta hai.
+# [KAISE CHALTA HAI] Nginx process runs with `daemon off;` flag.
+# [OUTPUT / SIDE EFFECT] KiranaHub Storefront live and listening for web visitors.
+# [VARIATIONS TO TRY] Custom error log level set karein: `["nginx", "-g", "daemon off; error_log /dev/stderr warn;"]`.
+CMD ["nginx", "-g", "daemon off;"]

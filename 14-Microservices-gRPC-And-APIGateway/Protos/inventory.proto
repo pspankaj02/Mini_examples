@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+option csharp_namespace = "KiranaHub.MicroservicesAndGateway.Protos";
+
+package inventory;
+
+// =========================================================================================
+// [TOPIC]: Protocol Buffers (Protobuf) Service Definition
+// [PURPOSE]: Binary high-performance inter-microservice communication contract.
+// =========================================================================================
+
+service InventoryGrpcService {
+  // [KYA KARTA HAI]: Unary RPC: SKU stock availability query karta hai.
+  rpc CheckStock (CheckStockRequest) returns (CheckStockResponse);
+
+  // [KYA KARTA HAI]: Unary RPC: Warehouse se stock deduct karta hai.
+  rpc DeductStock (DeductStockRequest) returns (DeductStockResponse);
+
+  // [KYA KARTA HAI]: Server Streaming RPC: Real-time stock change events stream karta hai client ko.
+  rpc SubscribeStockStream (SubscribeStockStreamRequest) returns (stream StockUpdateStreamResponse);
+}
+
+message CheckStockRequest {
+  string sku = 1;
+  int32 requested_quantity = 2;
+}
+
+message CheckStockResponse {
+  string sku = 1;
+  bool is_available = 2;
+  int32 current_stock = 3;
+}
+
+message DeductStockRequest {
+  string sku = 1;
+  int32 quantity = 2;
+}
+
+message DeductStockResponse {
+  string sku = 1;
+  bool success = 2;
+  int32 remaining_stock = 3;
+  string message = 4;
+}
+
+message SubscribeStockStreamRequest {
+  string category = 1;
+}
+
+message StockUpdateStreamResponse {
+  string sku = 1;
+  int32 current_stock = 2;
+  int32 stock_delta = 3;
+  string reason = 4;
+  string timestamp_utc = 5;
+}
+

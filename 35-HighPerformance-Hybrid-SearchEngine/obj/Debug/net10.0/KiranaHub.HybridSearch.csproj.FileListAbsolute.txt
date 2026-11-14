@@ -1,0 +1,15 @@
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\bin\Debug\net10.0\KiranaHub.HybridSearch.exe
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\bin\Debug\net10.0\KiranaHub.HybridSearch.deps.json
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\bin\Debug\net10.0\KiranaHub.HybridSearch.runtimeconfig.json
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\bin\Debug\net10.0\KiranaHub.HybridSearch.dll
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\bin\Debug\net10.0\KiranaHub.HybridSearch.pdb
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\obj\Debug\net10.0\KiranaHub.HybridSearch.GeneratedMSBuildEditorConfig.editorconfig
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\obj\Debug\net10.0\KiranaHub.HybridSearch.AssemblyInfoInputs.cache
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\obj\Debug\net10.0\KiranaHub.HybridSearch.AssemblyInfo.cs
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\obj\Debug\net10.0\KiranaHub.HybridSearch.csproj.CoreCompileInputs.cache
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\obj\Debug\net10.0\KiranaHub.HybridSearch.sourcelink.json
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\obj\Debug\net10.0\KiranaHub.HybridSearch.dll
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\obj\Debug\net10.0\refint\KiranaHub.HybridSearch.dll
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\obj\Debug\net10.0\KiranaHub.HybridSearch.pdb
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\obj\Debug\net10.0\KiranaHub.HybridSearch.genruntimeconfig.cache
+D:\ToLearn_Antigravity\35-HighPerformance-Hybrid-SearchEngine\obj\Debug\net10.0\ref\KiranaHub.HybridSearch.dll

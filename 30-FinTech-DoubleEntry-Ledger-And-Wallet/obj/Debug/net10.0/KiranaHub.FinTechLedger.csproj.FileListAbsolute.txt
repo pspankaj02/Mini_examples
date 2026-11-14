@@ -1,0 +1,15 @@
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\bin\Debug\net10.0\KiranaHub.FinTechLedger.exe
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\bin\Debug\net10.0\KiranaHub.FinTechLedger.deps.json
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\bin\Debug\net10.0\KiranaHub.FinTechLedger.runtimeconfig.json
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\bin\Debug\net10.0\KiranaHub.FinTechLedger.dll
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\bin\Debug\net10.0\KiranaHub.FinTechLedger.pdb
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\obj\Debug\net10.0\KiranaHub.FinTechLedger.GeneratedMSBuildEditorConfig.editorconfig
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\obj\Debug\net10.0\KiranaHub.FinTechLedger.AssemblyInfoInputs.cache
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\obj\Debug\net10.0\KiranaHub.FinTechLedger.AssemblyInfo.cs
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\obj\Debug\net10.0\KiranaHub.FinTechLedger.csproj.CoreCompileInputs.cache
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\obj\Debug\net10.0\KiranaHub.FinTechLedger.dll
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\obj\Debug\net10.0\refint\KiranaHub.FinTechLedger.dll
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\obj\Debug\net10.0\KiranaHub.FinTechLedger.pdb
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\obj\Debug\net10.0\KiranaHub.FinTechLedger.genruntimeconfig.cache
+d:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\obj\Debug\net10.0\ref\KiranaHub.FinTechLedger.dll
+D:\ToLearn_Antigravity\30-FinTech-DoubleEntry-Ledger-And-Wallet\obj\Debug\net10.0\KiranaHub.FinTechLedger.sourcelink.json

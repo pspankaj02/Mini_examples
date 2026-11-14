@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "KiranaHub.HybridSearch/1.0.0": {
+        "runtime": {
+          "KiranaHub.HybridSearch.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "KiranaHub.HybridSearch/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

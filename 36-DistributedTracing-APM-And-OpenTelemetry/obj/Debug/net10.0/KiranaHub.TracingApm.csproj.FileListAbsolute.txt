@@ -1,0 +1,15 @@
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\bin\Debug\net10.0\KiranaHub.TracingApm.exe
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\bin\Debug\net10.0\KiranaHub.TracingApm.deps.json
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\bin\Debug\net10.0\KiranaHub.TracingApm.runtimeconfig.json
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\bin\Debug\net10.0\KiranaHub.TracingApm.dll
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\bin\Debug\net10.0\KiranaHub.TracingApm.pdb
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\obj\Debug\net10.0\KiranaHub.TracingApm.GeneratedMSBuildEditorConfig.editorconfig
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\obj\Debug\net10.0\KiranaHub.TracingApm.AssemblyInfoInputs.cache
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\obj\Debug\net10.0\KiranaHub.TracingApm.AssemblyInfo.cs
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\obj\Debug\net10.0\KiranaHub.TracingApm.csproj.CoreCompileInputs.cache
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\obj\Debug\net10.0\KiranaHub.TracingApm.sourcelink.json
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\obj\Debug\net10.0\KiranaHub.TracingApm.dll
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\obj\Debug\net10.0\refint\KiranaHub.TracingApm.dll
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\obj\Debug\net10.0\KiranaHub.TracingApm.pdb
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\obj\Debug\net10.0\KiranaHub.TracingApm.genruntimeconfig.cache
+D:\ToLearn_Antigravity\36-DistributedTracing-APM-And-OpenTelemetry\obj\Debug\net10.0\ref\KiranaHub.TracingApm.dll

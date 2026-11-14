@@ -1,0 +1,231 @@
+# ==============================================================================================
+# KiranaHub Cloud-Native: Production Kubernetes Deployment with Zero-Downtime Rolling Updates
+# [KYA KARTA HAI] Microservices pods ko manage karta hai, self-healing, rolling updates, aur health probes provide karta hai.
+# [KYU ZAROORI HAI] Pod crash hone par automatic restart aur traffic shifting ke liye zero customer impact ke sath.
+# [KAISE CHALTA HAI] K8s Deployment controller desired state match karta hai via ReplicaSet.
+# [OUTPUT / SIDE EFFECT] Highly available containerized pods in Kubernetes cluster.
+# [VARIATIONS TO TRY] Canary deployments with Argo Rollouts or Flagger.
+# ==============================================================================================
+
+# [KYA KARTA HAI] Kubernetes API version define karta hai Deployment resource ke liye.
+# [KYU ZAROORI HAI] K8s control plane ko schema syntax version batana.
+# [KAISE CHALTA HAI] APIServer v1 apps endpoints par request deserialize karta hai.
+# [OUTPUT / SIDE EFFECT] Resource schema matched to apps/v1.
+# [VARIATIONS TO TRY] Use specific cluster capabilities.
+apiVersion: apps/v1
+
+# [KYA KARTA HAI] Resource kind specify karta hai.
+# [KYU ZAROORI HAI] Batata hai ki yeh ek stateless application Deployment object hai.
+# [KAISE CHALTA HAI] Controller manager DeploymentController ko instantiate karta hai.
+# [OUTPUT / SIDE EFFECT] Deployment resource created.
+# [VARIATIONS TO TRY] StatefulSet for stateful databases.
+kind: Deployment
+
+# [KYA KARTA HAI] Deployment metadata block define karta hai.
+# [KYU ZAROORI HAI] Resource name, namespace aur labels track karne ke liye.
+# [KAISE CHALTA HAI] K8s etcd storage me identifier index create hota hai.
+# [OUTPUT / SIDE EFFECT] Metadata object initialized.
+# [VARIATIONS TO TRY] Annotations for Prometheus scraping.
+metadata:
+  # [KYA KARTA HAI] Deployment ka unique name declare karta hai.
+  # [KYU ZAROORI HAI] `kubectl get deployment kiranahub-api` se inspect karne ke liye.
+  # [KAISE CHALTA HAI] Unique name indexed in namespace.
+  # [OUTPUT / SIDE EFFECT] Deployment named kiranahub-api.
+  # [VARIATIONS TO TRY] Prefix with environment `prod-kiranahub-api`.
+  name: kiranahub-api
+  # [KYA KARTA HAI] Isolated Kubernetes namespace define karta hai.
+  # [KYU ZAROORI HAI] Multi-tenancy aur team-level resource quotas enforce karne ke liye.
+  # [KAISE CHALTA HAI] Scopes resource under `kiranahub` namespace.
+  # [OUTPUT / SIDE EFFECT] Isolated namespace assignment.
+  # [VARIATIONS TO TRY] Default namespace or staging namespace.
+  namespace: kiranahub
+  # [KYA KARTA HAI] Categorization labels attach karta hai.
+  # [KYU ZAROORI HAI] Monitoring, service selectors, aur log filtering ke liye.
+  # [KAISE CHALTA HAI] Metadata key-value pairs stored in etcd.
+  # [OUTPUT / SIDE EFFECT] Labels indexed.
+  # [VARIATIONS TO TRY] Add `version: v1.0.0` or `tier: backend`.
+  labels:
+    app: kiranahub-api
+    tier: backend
+
+# [KYA KARTA HAI] Deployment specification block.
+# [KYU ZAROORI HAI] Desired replicas, update strategy, aur pod template describe karna.
+# [KAISE CHALTA HAI] Deployment controller continuously evaluates this spec against actual state.
+# [OUTPUT / SIDE EFFECT] Spec evaluation active.
+# [VARIATIONS TO TRY] Replicas managed by HPA.
+spec:
+  # [KYA KARTA HAI] Baseline running pods count specify karta hai.
+  # [KYU ZAROORI HAI] High availability ensure karna (minimum 2 pods so if one crashes, other serves).
+  # [KAISE CHALTA HAI] ReplicaSet ensures 2 pods are continuously running across nodes.
+  # [OUTPUT / SIDE EFFECT] 2 running pod instances.
+  # [VARIATIONS TO TRY] 3 or more for multi-AZ redundancy.
+  replicas: 2
+
+  # [KYA KARTA HAI] Rolling update deployment strategy configure karta hai.
+  # [KYU ZAROORI HAI] Zero-downtime deployment — new pods boot hone ke baad hi purane pods terminate honge.
+  # [KAISE CHALTA HAI] Kube-controller-manager step-by-step replaces pods.
+  # [OUTPUT / SIDE EFFECT] Seamless updates without 502/503 errors.
+  # [VARIATIONS TO TRY] Recreate strategy for legacy single-instance apps.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # [KYA KARTA HAI] Maximum extra pods during deployment define karta hai.
+      # [KYU ZAROORI HAI] Cluster capacity se zyada pods spawn hone se rokta hai.
+      # [KAISE CHALTA HAI] Max 1 new pod creates before terminating old ones.
+      # [OUTPUT / SIDE EFFECT] Surge bounded to 1.
+      # [VARIATIONS TO TRY] Percentage values like `25%`.
+      maxSurge: 1
+      # [KYA KARTA HAI] Maximum unavailable pods count during rollout.
+      # [KYU ZAROORI HAI] Guarantees zero downtime by never allowing existing capacity to drop.
+      # [KAISE CHALTA HAI] Prevents terminating any existing pod until new pod passes readiness probe.
+      # [OUTPUT / SIDE EFFECT] 100% capacity maintained.
+      # [VARIATIONS TO TRY] `maxUnavailable: 1` if cluster capacity is constrained.
+      maxUnavailable: 0
+
+  # [KYA KARTA HAI] Pod selector label query specify karta hai.
+  # [KYU ZAROORI HAI] Deployment ko batata hai ki kin pods ko manage karna hai.
+  # [KAISE CHALTA HAI] Evaluates pod template labels.
+  # [OUTPUT / SIDE EFFECT] Matches pods with `app: kiranahub-api`.
+  # [VARIATIONS TO TRY] MatchExpressions for complex logic.
+  selector:
+    matchLabels:
+      app: kiranahub-api
+
+  # [KYA KARTA HAI] Pod creation template block.
+  # [KYU ZAROORI HAI] Spawn hone wale har individual pod ka blueprint provide karta hai.
+  # [KAISE CHALTA HAI] Kubelet reads this template to launch container runtime.
+  # [OUTPUT / SIDE EFFECT] Blueprint ready.
+  # [VARIATIONS TO TRY] NodeSelectors for GPU/High-memory nodes.
+  template:
+    metadata:
+      # [KYA KARTA HAI] Pod-level labels assign karta hai.
+      # [KYU ZAROORI HAI] Service selector aur network policies in labels se pods ko discover karti hain.
+      # [KAISE CHALTA HAI] Attached to every running pod.
+      # [OUTPUT / SIDE EFFECT] Pod labeled `app: kiranahub-api`.
+      # [VARIATIONS TO TRY] Add commit hash label for gitops tracing.
+      labels:
+        app: kiranahub-api
+        tier: backend
+
+    # [KYA KARTA HAI] Pod specification container details block.
+    # [KYU ZAROORI HAI] Container images, ports, security contexts, probes, aur resource limits define karna.
+    # [KAISE CHALTA HAI] Kubelet interprets this on the target worker node.
+    # [OUTPUT / SIDE EFFECT] Pod config compiled.
+    # [VARIATIONS TO TRY] InitContainers for database migrations.
+    spec:
+      # [KYA KARTA HAI] Pod-level security context configure karta hai.
+      # [KYU ZAROORI HAI] Rootless container security hardening enforce karna.
+      # [KAISE CHALTA HAI] Linux namespaces and cgroups drop root capabilities.
+      # [OUTPUT / SIDE EFFECT] Enforces non-root execution.
+      # [VARIATIONS TO TRY] AppArmor or Seccomp profiles.
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1654
+        fsGroup: 1654
+
+      # [KYA KARTA HAI] Containers array define karta hai.
+      # [KYU ZAROORI HAI] Pod ke andar chalne wale individual containers list karna.
+      # [KAISE CHALTA HAI] Launches defined containers in shared network/storage namespace.
+      # [OUTPUT / SIDE EFFECT] Container initiated.
+      # [VARIATIONS TO TRY] Sidecar container for Envoy or log shipping.
+      containers:
+        # [KYA KARTA HAI] Primary Web API application container definition.
+        # [KYU ZAROORI HAI] KiranaHub ASP.NET 10 microservice run karna.
+        # [KAISE CHALTA HAI] Kubelet pulls and executes image.
+        # [OUTPUT / SIDE EFFECT] Container instance alive.
+        # [VARIATIONS TO TRY] Secondary sidecar containers.
+        - name: kiranahub-api
+          # [KYA KARTA HAI] Production container image reference.
+          # [KYU ZAROORI HAI] Container registry se secure production image pull karna.
+          # [KAISE CHALTA HAI] Image pulled from private or public container registry.
+          # [OUTPUT / SIDE EFFECT] Image pulled and instantiated.
+          # [VARIATIONS TO TRY] Digest pinning `sha256:...` for immutable verification.
+          image: kiranahub/webapi:latest
+          # [KYA KARTA HAI] Image pull policy configure karta hai.
+          # [KYU ZAROORI HAI] Local cached image reuse karna agar available ho, repeatedly network download se bachna.
+          # [KAISE CHALTA HAI] Pulls only if not present on node.
+          # [OUTPUT / SIDE EFFECT] Faster node restart.
+          # [VARIATIONS TO TRY] Always in dev/staging.
+          imagePullPolicy: IfNotPresent
+
+          # [KYA KARTA HAI] Container listening port metadata.
+          # [KYU ZAROORI HAI] Documentation and port mapping for kube-proxy.
+          # [KAISE CHALTA HAI] Maps container port 8080.
+          # [OUTPUT / SIDE EFFECT] Port 8080 exposed.
+          # [VARIATIONS TO TRY] Named ports for easy service references.
+          ports:
+            - name: http
+              containerPort: 8080
+
+          # [KYA KARTA HAI] Container CPU aur Memory resource allocation define karta hai.
+          # [KYU ZAROORI HAI] Resource starvation rokhna aur noisy-neighbor problem prevent karna.
+          # [KAISE CHALTA HAI] Linux cgroups enforce hardware limits.
+          # [OUTPUT / SIDE EFFECT] Guaranteed resources with bounded upper ceiling.
+          # [VARIATIONS TO TRY] Burstable vs Guaranteed QoS class.
+          resources:
+            # [KYA KARTA HAI] Minimum guaranteed resources define karta hai.
+            # [KYU ZAROORI HAI] Scheduler pod ko tabhi node par place karega jab itni memory/CPU available ho.
+            # [KAISE CHALTA HAI] Kube-scheduler uses requests for placement algorithms.
+            # [OUTPUT / SIDE EFFECT] 250m CPU (0.25 core) & 256Mi RAM reserved.
+            # [VARIATIONS TO TRY] Adjust based on load testing metrics.
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            # [KYA KARTA HAI] Maximum hard ceiling limits define karta hai.
+            # [KYU ZAROORI HAI] Memory leak hone par poore worker node ko crash hone se bachata hai (OOMKilled triggers on container).
+            # [KAISE CHALTA HAI] Enforced strictly by Linux cgroup limiters.
+            # [OUTPUT / SIDE EFFECT] 500m CPU (0.5 core) & 512Mi RAM max cap.
+            # [VARIATIONS TO TRY] 1000m CPU during flash sales.
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+          # [KYA KARTA HAI] Liveness probe configure karta hai.
+          # [KYU ZAROORI HAI] Deadlock ya unhandled freeze me pod ko automatically restart karna.
+          # [KAISE CHALTA HAI] Kubelet periodically HTTP GET request bhejta hai `/health/live` par.
+          # [OUTPUT / SIDE EFFECT] Automatic pod restart if 3 consecutive failures occur.
+          # [VARIATIONS TO TRY] TCP socket probe or exec command probe.
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          # [KYA KARTA HAI] Readiness probe configure karta hai.
+          # [KYU ZAROORI HAI] Pod ko tab tak customer live traffic na bhejna jab tak DB connect na ho jaye aur warm-up complete na ho.
+          # [KAISE CHALTA HAI] Kube-proxy endpoint controller checks `/health/ready` before adding pod IP to load balancer.
+          # [OUTPUT / SIDE EFFECT] Zero failed requests during application startup.
+          # [VARIATIONS TO TRY] Readiness checks on external Redis connectivity.
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 2
+            failureThreshold: 2
+
+          # [KYA KARTA HAI] Environment variables injection block.
+          # [KYU ZAROORI HAI] ConfigMap aur Secret se runtime settings read karna.
+          # [KAISE CHALTA HAI] Injected into container process environment.
+          # [OUTPUT / SIDE EFFECT] App settings populated.
+          # [VARIATIONS TO TRY] `envFrom` for bulk injection.
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: kiranahub-config
+                  key: ASPNETCORE_ENVIRONMENT
+            - name: ConnectionStrings__Redis
+              valueFrom:
+                configMapKeyRef:
+                  name: kiranahub-config
+                  key: REDIS_URL
+            - name: ConnectionStrings__Database
+              valueFrom:
+                secretKeyRef:
+                  name: kiranahub-secrets
+                  key: DB_CONNECTION_STRING

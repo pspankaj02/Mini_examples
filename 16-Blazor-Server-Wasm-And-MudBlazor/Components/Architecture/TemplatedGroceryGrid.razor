@@ -1,0 +1,71 @@
+@*
+    =========================================================================================
+    [TOPIC]: Generic Templated Components in Blazor
+    [PURPOSE]: Demonstrates RenderFragment and RenderFragment<TItem> for reusable UI layouts.
+    =========================================================================================
+*@
+
+@* [KYA KARTA HAI]: Generic type parameter declare karta hai. *@
+@* [KYU ZAROORI HAI]: Kisi bhi entity type (GroceryItem, Order, Customer) ke sath ye component reuse ho sake. *@
+@typeparam TItem
+
+<div class="table-responsive border rounded shadow-sm">
+    <table class="table table-hover align-middle mb-0">
+        @* [KYA KARTA HAI]: Optional HeaderTemplate fragment render karta hai agar parent ne supply kiya ho. *@
+        @if (HeaderTemplate != null)
+        {
+            <thead class="table-light">
+                @HeaderTemplate
+            </thead>
+        }
+
+        <tbody>
+            @* [KYA KARTA HAI]: Check karta hai ki items list null ya empty hai ya nahi. *@
+            @if (Items == null || Items.Count == 0)
+            {
+                <tr>
+                    <td colspan="10" class="text-center py-4 text-muted">
+                        @* [KYA KARTA HAI]: EmptyTemplate render karta hai agar defined ho, warna default message. *@
+                        @if (EmptyTemplate != null)
+                        {
+                            @EmptyTemplate
+                        }
+                        else
+                        {
+                            <span>No items found in this category.</span>
+                        }
+                    </td>
+                </tr>
+            }
+            else
+            {
+                @* [KYA KARTA HAI]: Sabhi items par loop chala kar RowTemplate parameterized fragment me item pass karta hai. *@
+                @* [KAISE CHALTA HAI]: RowTemplate(item) call karne par parent ka defined Razor template current item ke data se render hota hai. *@
+                @foreach (var item in Items)
+                {
+                    @RowTemplate(item)
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    // [KYA KARTA HAI]: Data collection parameter of generic type TItem.
+    [Parameter]
+    public IReadOnlyList<TItem> Items { get; set; } = Array.Empty<TItem>();
+
+    // [KYA KARTA HAI]: Parameterless RenderFragment parameter jo table header HTML markup represent karta hai.
+    [Parameter]
+    public RenderFragment? HeaderTemplate { get; set; }
+
+    // [KYA KARTA HAI]: Parameterized RenderFragment<TItem> jo har individual row ka custom HTML layout define karta hai.
+    // [KYU ZAROORI HAI]: Caller ko complete freedom deta hai table cell styling aur action buttons customize karne ki.
+    [Parameter, EditorRequired]
+    public RenderFragment<TItem> RowTemplate { get; set; } = null!;
+
+    // [KYA KARTA HAI]: Optional RenderFragment jo empty state me render hota hai.
+    [Parameter]
+    public RenderFragment? EmptyTemplate { get; set; }
+}
+

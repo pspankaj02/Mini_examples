@@ -1,0 +1,113 @@
+# ==============================================================================================
+# KiranaHub Cloud-Native: Production Multi-Stage Dockerfile for ASP.NET 10 Web API
+# [KYA KARTA HAI] Multi-stage build use karke 2GB SDK image se 150MB secure distroless runtime banata hai.
+# [KYU ZAROORI HAI] Production me build tools (compilers, git) nahi hone chahiye security exploit attack surface kam karne ke liye.
+# [KAISE CHALTA HAI] Pehle build stage me binaries compile hoti hain, fir publish stage se chiseled runtime me copy hoti hain.
+# [OUTPUT / SIDE EFFECT] Ultra-small, secure, rootless OCI compliant container image.
+# [VARIATIONS TO TRY] Alpine linux base vs Debian chiseled base vs Native AOT distroless.
+# ==============================================================================================
+
+# [KYA KARTA HAI] Official Microsoft .NET 10 SDK image ko builder stage define karta hai.
+# [KYU ZAROORI HAI] Compilers (Roslyn), MSBuild aur NuGet restore engine sirf SDK image me hote hain.
+# [KAISE CHALTA HAI] Docker daemon Docker Hub/MCR se `mcr.microsoft.com/dotnet/sdk:10.0` layer pull karta hai.
+# [OUTPUT / SIDE EFFECT] Builder environment initialize hota hai.
+# [VARIATIONS TO TRY] Specific patch version pin karein jaise `sdk:10.0.100` deterministic CI/CD builds ke liye.
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-env
+
+# [KYA KARTA HAI] Container ke andar build workspace folder `/src` set karta hai.
+# [KYU ZAROORI HAI] File system organization clean rehti hai aur root level pollution se bachti hai.
+# [KAISE CHALTA HAI] Agar directory exist nahi karti toh Docker isse create karta hai aur current path yahan shift karta hai.
+# [OUTPUT / SIDE EFFECT] Working directory `/src` set hoti hai.
+# [VARIATIONS TO TRY] Custom path jaise `/app/source` use kiya ja sakta hai.
+WORKDIR /src
+
+# [KYA KARTA HAI] Solution file aur csproj files ko builder container me copy karta hai.
+# [KYU ZAROORI HAI] Docker layer caching leverage karne ke liye (dependencies tabhi restore hongi jab csproj badlega, source code par nahi).
+# [KAISE CHALTA HAI] File paths host machine se container file tree me copy hote hain.
+# [OUTPUT / SIDE EFFECT] Csproj files `/src/` ke andar copy ho jati hain.
+# [VARIATIONS TO TRY] Monorepo me specific project folder hi copy karein layer cache burst rokne ke liye.
+COPY ["09-AspNetCore-WebAPI-Fundamentals/KiranaHub.WebApi.csproj", "09-AspNetCore-WebAPI-Fundamentals/"]
+
+# [KYA KARTA HAI] NuGet packages restore karta hai bina poora project compile kiye.
+# [KYU ZAROORI HAI] Fast incremental builds — agar code change hua par package nahi, toh yeh layer cache se aayegi.
+# [KAISE CHALTA HAI] dotnet CLI project file ko read karke external NuGet dependencies download karta hai.
+# [OUTPUT / SIDE EFFECT] Packages cache layer `/root/.nuget` me store ho jata hai.
+# [VARIATIONS TO TRY] `--locked-mode` flag use karein packages.lock.json enforce karne ke liye.
+RUN dotnet restore "09-AspNetCore-WebAPI-Fundamentals/KiranaHub.WebApi.csproj"
+
+# [KYA KARTA HAI] Baaki saara source code repository se container me copy karta hai.
+# [KYU ZAROORI HAI] Compilation ke liye complete source files, controllers aur models ki zaroorat hoti hai.
+# [KAISE CHALTA HAI] Host working directory ke files docker daemon ke stream ke through copy hoti hain.
+# [OUTPUT / SIDE EFFECT] Source code files container filesystem me load ho jati hain.
+# [VARIATIONS TO TRY] `.dockerignore` me bin, obj, git folders exclude karna mandatory hai.
+COPY . .
+
+# [KYA KARTA HAI] Source code directory me switch karta hai compilation execute karne ke liye.
+# [KYU ZAROORI HAI] dotnet build commands relative paths ko project folder ke context me execute karti hain.
+# [KAISE CHALTA HAI] Active working directory change ho jati hai.
+# [OUTPUT / SIDE EFFECT] Working directory `/src/09-AspNetCore-WebAPI-Fundamentals` banti hai.
+# [VARIATIONS TO TRY] Root directory se direct `-p:ProjectPath` specify karke bhi build chalaya ja sakta hai.
+WORKDIR "/src/09-AspNetCore-WebAPI-Fundamentals"
+
+# [KYA KARTA HAI] Release configuration me production binaries publish karta hai bina unneeded debug symbols ke.
+# [KYU ZAROORI HAI] Debug overhead hatata hai aur IL code ko optimize karke production performance enhance karta hai.
+# [KAISE CHALTA HAI] Roslyn compiler C# code ko optimized intermediate language me compile karke `/app/publish` me dump karta hai.
+# [OUTPUT / SIDE EFFECT] Release binaries ready in `/app/publish`.
+# [VARIATIONS TO TRY] `--self-contained true` flag laga kar framework-dependent se standalone binary banayein.
+RUN dotnet publish "KiranaHub.WebApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+# [KYA KARTA HAI] Final runtime stage chiseled ASP.NET 10 base image se initialize karta hai.
+# [KYU ZAROORI HAI] Chiseled images me shell (bash/sh) aur package managers nahi hote, attackers reverse-shell nahi khol sakte.
+# [KAISE CHALTA HAI] Minimal micro-OS image initialize hoti hai jisme sirf .NET runtime aur libc dependencies hoti hain.
+# [OUTPUT / SIDE EFFECT] Ultra-secure ~110MB production runtime stage ready.
+# [VARIATIONS TO TRY] `mcr.microsoft.com/dotnet/aspnet:10.0-alpine` agar musl libc pasand ho.
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
+
+# [KYA KARTA HAI] Final container me production binary directory set karta hai.
+# [KYU ZAROORI HAI] Application run hone par base path structured aur standardized rehta hai.
+# [KAISE CHALTA HAI] Target runtime filesystem me `/app` directory set hoti hai.
+# [OUTPUT / SIDE EFFECT] Container execution context `/app` par map hota hai.
+# [VARIATIONS TO TRY] Organization standards ke hisaab se `/opt/kiranahub` use karein.
+WORKDIR /app
+
+# [KYA KARTA HAI] Builder stage se compiled release binaries ko runtime image me copy karta hai.
+# [KYU ZAROORI HAI] SDK stage ke 1.8GB build bloat ko discard karke sirf 15MB binary artifacts runtime me le jaata hai.
+# [KAISE CHALTA HAI] Docker multistage copy build-env container layer se `/app/publish` read karke current dir me place karta hai.
+# [OUTPUT / SIDE EFFECT] Final image lightweight aur secure banti hai.
+# [VARIATIONS TO TRY] Permissions chown specify karein: `--chown=$APP_UID:$APP_UID`.
+COPY --from=build-env /app/publish .
+
+# [KYA KARTA HAI] Kestrel server ko unprivileged non-root port 8080 par listen karne ke liye configure karta hai.
+# [KYU ZAROORI HAI] Security best practice — Linux non-root users port < 1024 (e.g. 80) bind nahi kar sakte bina root access ke.
+# [KAISE CHALTA HAI] ASPNETCORE_HTTP_PORTS environment variable ko Kestrel runtime boot par read karta hai.
+# [OUTPUT / SIDE EFFECT] Web API port 8080 par bind hoti hai.
+# [VARIATIONS TO TRY] HTTPS setup ke liye `ASPNETCORE_HTTPS_PORTS=8443` add karein.
+ENV ASPNETCORE_HTTP_PORTS=8080
+
+# [KYA KARTA HAI] Production environment flag set karta hai.
+# [KYU ZAROORI HAI] Swagger UI aur verbose developer exception pages production me expose hone se rokta hai.
+# [KAISE CHALTA HAI] IWebHostEnvironment.IsProduction() returns true in ASP.NET pipeline.
+# [OUTPUT / SIDE EFFECT] Strict production exception filters aur secure headers enable ho jaate hain.
+# [VARIATIONS TO TRY] Staging cluster ke liye `ASPNETCORE_ENVIRONMENT=Staging` set karein.
+ENV ASPNETCORE_ENVIRONMENT=Production
+
+# [KYA KARTA HAI] Container ko non-root user UID ($APP_UID = 1654) ke context me switch karta hai.
+# [KYU ZAROORI HAI] Container escape vulnerabilities se host machine ko safeguard karta hai (CVE prevention).
+# [KAISE CHALTA HAI] Linux kernel processes ko non-root user credentials ke under isolate karta hai.
+# [OUTPUT / SIDE EFFECT] Root privileges drop ho jaati hain.
+# [VARIATIONS TO TRY] Kubernetes securityContext `runAsUser: 1654` ke sath enforce karein.
+USER $APP_UID
+
+# [KYA KARTA HAI] Documentation metadata expose karta hai ki container port 8080 par listen karega.
+# [KYU ZAROORI HAI] Docker networking aur Kubernetes port discovery manifests ke liye standard documentation contract.
+# [KAISE CHALTA HAI] Docker image metadata inspect me ports expose mark karta hai.
+# [OUTPUT / SIDE EFFECT] Port documentation ready.
+# [VARIATIONS TO TRY] Multiple ports expose karein metrics ke liye jaise `EXPOSE 8080 9090`.
+EXPOSE 8080
+
+# [KYA KARTA HAI] Container startup entry point configure karta hai jo Web API process launch karega.
+# [KYU ZAROORI HAI] Exec-form syntax use karne se signal (SIGTERM, SIGINT) direct PID 1 .NET process ko receive hote hain graceful shutdown ke liye.
+# [KAISE CHALTA HAI] dotnet host executable invoke hota hai aur KiranaHub.WebApi.dll ko bootstrap karta hai.
+# [OUTPUT / SIDE EFFECT] KiranaHub ASP.NET 10 microservice runs inside isolated container.
+# [VARIATIONS TO TRY] Memory limit dump flags pass karein: `["dotnet", "--roll-forward", "LatestMajor", "KiranaHub.WebApi.dll"]`.
+ENTRYPOINT ["dotnet", "KiranaHub.WebApi.dll"]

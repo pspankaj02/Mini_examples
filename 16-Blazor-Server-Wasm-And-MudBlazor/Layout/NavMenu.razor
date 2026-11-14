@@ -1,0 +1,21 @@
+@using MudBlazor
+
+@*
+    =========================================================================================
+    [TOPIC]: MudBlazor Navigation Menu
+    [PURPOSE]: Provides links to Catalog, Component Architecture, and Realtime Tracking.
+    =========================================================================================
+*@
+
+<MudNavMenu>
+    <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Storefront">
+        Grocery Catalog
+    </MudNavLink>
+    <MudNavLink Href="/architecture" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Widgets">
+        Component Architecture
+    </MudNavLink>
+    <MudNavLink Href="/tracking" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.TwoWheeler">
+        Live Rider Tracker
+    </MudNavLink>
+</MudNavMenu>
+
