@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- [KYA KARTA HAI]: Console application target output type define karta hai -->
+    <!-- [KYU ZAROORI HAI]: Wasm sandbox engine benchmark ko standalone run karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: OutputType Exe se executable binary generate hoti hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Runnable executable application create hoti hai -->
+    <!-- [VARIATIONS TO TRY]: Class library bana kar merchant plugin host me embed karein -->
+    <OutputType>Exe</OutputType>
+    
+    <!-- [KYA KARTA HAI]: Modern .NET 10.0 framework target karta hai -->
+    <!-- [KYU ZAROORI HAI]: Latest runtime performance optimizations aur memory safety features ke liye -->
+    <!-- [KAISE CHALTA HAI]: Roslyn compiler .NET 10 binaries generate karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: High-performance JIT execution -->
+    <!-- [VARIATIONS TO TRY]: net8.0 ya net9.0 target karein -->
+    <TargetFramework>net10.0</TargetFramework>
+    
+    <!-- [KYA KARTA HAI]: Nullable static code analysis enable karta hai -->
+    <!-- [KYU ZAROORI HAI]: NullReferenceException prevent karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: Static compiler analysis potential nulls ko warn karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Memory-safe and crash-free execution -->
+    <!-- [VARIATIONS TO TRY]: TreatWarningsAsErrors true karein -->
+    <Nullable>enable</Nullable>
+    
+    <!-- [KYA KARTA HAI]: Global implicit using directives allow karta hai -->
+    <!-- [KYU ZAROORI HAI]: Code boilerplate ko minimum rakhne ke liye -->
+    <!-- [KAISE CHALTA HAI]: Standard framework namespaces automatically import hote hain -->
+    <!-- [OUTPUT / SIDE EFFECT]: Clean code without redundant usings -->
+    <!-- [VARIATIONS TO TRY]: Explicit usings per file -->
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

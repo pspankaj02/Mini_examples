@@ -171,9 +171,20 @@ flowchart TD
 
 ---
 
+### **Level 9: Low-Latency Matching, Consensus & Post-Quantum Cryptography**
+| # | Project Name | Key Topics Covered | Study Guide |
+|---|---|---|---|
+| **37** | [`37-LowLatency-LMAX-Disruptor-RingBuffer`](file:///d:/ToLearn_Antigravity/37-LowLatency-LMAX-Disruptor-RingBuffer) | LMAX Disruptor pattern, 64-byte cache-line padding (false sharing prevention), Bitwise circular ring buffer, Zero-GC in-place mutation, 3-stage pipeline | [README.md](file:///d:/ToLearn_Antigravity/37-LowLatency-LMAX-Disruptor-RingBuffer/README.md) |
+| **38** | [`38-KernelBypass-ZeroCopy-RpcGateway`](file:///d:/ToLearn_Antigravity/38-KernelBypass-ZeroCopy-RpcGateway) | `System.IO.Pipelines` (`PipeReader`/`PipeWriter`), `ReadOnlySequence<byte>`, Stackalloc struct mapping via `MemoryMarshal.Read<T>`, Vectorized CRC32 | [README.md](file:///d:/ToLearn_Antigravity/38-KernelBypass-ZeroCopy-RpcGateway/README.md) |
+| **39** | [`39-WebAssembly-Wasm-Plugin-Sandbox`](file:///d:/ToLearn_Antigravity/39-WebAssembly-Wasm-Plugin-Sandbox) | In-process WebAssembly bytecode interpreter, 64KB linear memory page isolation, Deterministic instruction metering (Gas limit), Host-guest syscall ABI | [README.md](file:///d:/ToLearn_Antigravity/39-WebAssembly-Wasm-Plugin-Sandbox/README.md) |
+| **40** | [`40-DistributedConsensus-Raft-Protocol`](file:///d:/ToLearn_Antigravity/40-DistributedConsensus-Raft-Protocol) | Raft state machine (`Follower`, `Candidate`, `Leader`), Jittered election timers (150-300ms), Log replication, Quorum commitment, Failover & partition healing | [README.md](file:///d:/ToLearn_Antigravity/40-DistributedConsensus-Raft-Protocol/README.md) |
+| **41** | [`41-PostQuantum-Cryptography-ZeroTrust`](file:///d:/ToLearn_Antigravity/41-PostQuantum-Cryptography-ZeroTrust) | FIPS 203 ML-KEM (Kyber-512) lattice polynomial ring arithmetic, FIPS 204 ML-DSA (Dilithium) digital signatures, Zero-Trust tamper-evident FinTech ledger | [README.md](file:///d:/ToLearn_Antigravity/41-PostQuantum-Cryptography-ZeroTrust/README.md) |
+
+---
+
 ## 🚀 How to Build the Master Solution
 
-1. **Build all 29 .NET Projects (Levels 1, 2, 3, 4, 6, 7, and 8)**:
+1. **Build all 34 .NET Projects (Levels 1 through 9)**:
    ```bash
    dotnet build KiranaHub.slnx --no-restore
    ```
@@ -199,5 +210,10 @@ flowchart TD
    - `34-WarehouseIoT`: `dotnet run --project 34-IoT-Edge-And-ColdChain-WarehouseAutomation/KiranaHub.WarehouseIoT.csproj`
    - `35-HybridSearch`: `dotnet run --project 35-HighPerformance-Hybrid-SearchEngine/KiranaHub.HybridSearch.csproj`
    - `36-TracingApm`: `dotnet run --project 36-DistributedTracing-APM-And-OpenTelemetry/KiranaHub.TracingApm.csproj`
+   - `37-Disruptor`: `dotnet run --project 37-LowLatency-LMAX-Disruptor-RingBuffer/KiranaHub.Disruptor.csproj`
+   - `38-ZeroCopyRpc`: `dotnet run --project 38-KernelBypass-ZeroCopy-RpcGateway/KiranaHub.ZeroCopyRpc.csproj`
+   - `39-WasmSandbox`: `dotnet run --project 39-WebAssembly-Wasm-Plugin-Sandbox/KiranaHub.WasmSandbox.csproj`
+   - `40-RaftConsensus`: `dotnet run --project 40-DistributedConsensus-Raft-Protocol/KiranaHub.RaftConsensus.csproj`
+   - `41-PostQuantumCrypto`: `dotnet run --project 41-PostQuantum-Cryptography-ZeroTrust/KiranaHub.PostQuantumCrypto.csproj`
 
 

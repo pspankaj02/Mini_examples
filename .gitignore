@@ -3,3 +3,11 @@ tools/
 
 # Node dependencies (exceeds GitHub 100MB blob limit due to next-swc binary)
 node_modules/
+
+# .NET Build artifacts
+**/bin/
+**/obj/
+
+# IDE directories
+.vs/
+.vscode/

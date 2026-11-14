@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- [KYA KARTA HAI]: Console application output type define karta hai -->
+    <!-- [KYU ZAROORI HAI]: Raft consensus cluster simulation ko standalone run karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: OutputType Exe se runnable executable generate hota hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Runnable binary created -->
+    <!-- [VARIATIONS TO TRY]: Class library for embedding in distributed store services -->
+    <OutputType>Exe</OutputType>
+    
+    <!-- [KYA KARTA HAI]: Modern .NET 10.0 framework target karta hai -->
+    <!-- [KYU ZAROORI HAI]: High-performance task scheduling aur async primitives ke liye -->
+    <!-- [KAISE CHALTA HAI]: Roslyn compiler .NET 10 IL generate karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: High-efficiency runtime execution -->
+    <!-- [VARIATIONS TO TRY]: net8.0 ya net9.0 target karein -->
+    <TargetFramework>net10.0</TargetFramework>
+    
+    <!-- [KYA KARTA HAI]: Nullable static code analysis enable karta hai -->
+    <!-- [KYU ZAROORI HAI]: Distributed state machine me null reference exceptions eliminate karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: Compiler validates nullability at compile time -->
+    <!-- [OUTPUT / SIDE EFFECT]: Reliable and crash-free distributed node logic -->
+    <!-- [VARIATIONS TO TRY]: Nullable disable -->
+    <Nullable>enable</Nullable>
+    
+    <!-- [KYA KARTA HAI]: Global implicit using directives allow karta hai -->
+    <!-- [KYU ZAROORI HAI]: Standard system namespaces boilerplate reduce karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: Automatically imports System, System.Collections.Generic etc. -->
+    <!-- [OUTPUT / SIDE EFFECT]: Concise source code -->
+    <!-- [VARIATIONS TO TRY]: Explicit usings -->
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

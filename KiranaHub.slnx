@@ -86,4 +86,19 @@
   <Folder Name="/36-DistributedTracing-APM-And-OpenTelemetry/">
     <Project Path="36-DistributedTracing-APM-And-OpenTelemetry/KiranaHub.TracingApm.csproj" />
   </Folder>
+  <Folder Name="/37-LowLatency-LMAX-Disruptor-RingBuffer/">
+    <Project Path="37-LowLatency-LMAX-Disruptor-RingBuffer/KiranaHub.Disruptor.csproj" />
+  </Folder>
+  <Folder Name="/38-KernelBypass-ZeroCopy-RpcGateway/">
+    <Project Path="38-KernelBypass-ZeroCopy-RpcGateway/KiranaHub.ZeroCopyRpc.csproj" />
+  </Folder>
+  <Folder Name="/39-WebAssembly-Wasm-Plugin-Sandbox/">
+    <Project Path="39-WebAssembly-Wasm-Plugin-Sandbox/KiranaHub.WasmSandbox.csproj" />
+  </Folder>
+  <Folder Name="/40-DistributedConsensus-Raft-Protocol/">
+    <Project Path="40-DistributedConsensus-Raft-Protocol/KiranaHub.RaftConsensus.csproj" />
+  </Folder>
+  <Folder Name="/41-PostQuantum-Cryptography-ZeroTrust/">
+    <Project Path="41-PostQuantum-Cryptography-ZeroTrust/KiranaHub.PostQuantumCrypto.csproj" />
+  </Folder>
 </Solution>

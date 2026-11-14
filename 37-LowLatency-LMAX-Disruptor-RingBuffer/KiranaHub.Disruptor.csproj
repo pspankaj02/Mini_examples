@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- [KYA KARTA HAI]: Console application executable target define karta hai -->
+    <!-- [KYU ZAROORI HAI]: Low-latency Disruptor engine ko standalone benchmark ke taur par run karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: OutputType Exe se OS entrypoint generate hoti hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Standalone runnable executable banta hai -->
+    <!-- [VARIATIONS TO TRY]: Class library bana kar high-frequency trading services me embed kar sakte hain -->
+    <OutputType>Exe</OutputType>
+    
+    <!-- [KYA KARTA HAI]: Modern .NET 10.0 target framework specify karta hai -->
+    <!-- [KYU ZAROORI HAI]: Latest hardware intrinsics, zero-allocation memory APIs aur performance optimizations enable karta hai -->
+    <!-- [KAISE CHALTA HAI]: Roslyn compiler .NET 10 IL generate karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Ultra-fast runtime JIT optimization milti hai -->
+    <!-- [VARIATIONS TO TRY]: Target net8.0 ya net9.0 par switch kar sakte hain -->
+    <TargetFramework>net10.0</TargetFramework>
+    
+    <!-- [KYA KARTA HAI]: Nullable reference types analysis enable karta hai -->
+    <!-- [KYU ZAROORI HAI]: NullReferenceException ko compile time par hi eliminate karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: Compiler static analysis se code me potential nulls check karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Robust, crash-free low-latency code banta hai -->
+    <!-- [VARIATIONS TO TRY]: WarningsAsErrors true karke strict mode enable kar sakte hain -->
+    <Nullable>enable</Nullable>
+    
+    <!-- [KYA KARTA HAI]: Global implicit using directives allow karta hai -->
+    <!-- [KYU ZAROORI HAI]: Boilerplate using System, using System.Collections etc. ko reduce karta hai -->
+    <!-- [KAISE CHALTA HAI]: SDK standard namespaces ko automatically compile unit me include karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Code concise aur clean rehta hai -->
+    <!-- [VARIATIONS TO TRY]: Disable karke har namespace manually include karein -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- [KYA KARTA HAI]: Unsafe code execution allow karta hai -->
+    <!-- [KYU ZAROORI HAI]: Cache-line explicit memory layout aur low-level memory operations ke liye -->
+    <!-- [KAISE CHALTA HAI]: Compiler unsafe blocks aur StructLayout attributes ko compile hone deta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Hardware-level memory control milta hai -->
+    <!-- [VARIATIONS TO TRY]: Disable karne par StructLayout explicit padding safe fields se karni padti hai -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+</Project>

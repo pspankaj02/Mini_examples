@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- [KYA KARTA HAI]: Console application target output type define karta hai -->
+    <!-- [KYU ZAROORI HAI]: Zero-copy RPC gateway benchmark ko standalone run karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: OutputType Exe se runnable binary generate hoti hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Runnable executable binary create hoti hai -->
+    <!-- [VARIATIONS TO TRY]: Class library bana kar high-performance microservices me embed karein -->
+    <OutputType>Exe</OutputType>
+    
+    <!-- [KYA KARTA HAI]: Modern .NET 10.0 framework target karta hai -->
+    <!-- [KYU ZAROORI HAI]: Latest System.IO.Pipelines aur MemoryMarshal zero-copy features use karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: Roslyn compiler .NET 10 binaries generate karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: High-performance runtime optimization available hoti hai -->
+    <!-- [VARIATIONS TO TRY]: net8.0 ya net9.0 target karein -->
+    <TargetFramework>net10.0</TargetFramework>
+    
+    <!-- [KYA KARTA HAI]: Nullable analysis enable karta hai -->
+    <!-- [KYU ZAROORI HAI]: Null pointers aur runtime crash prevent karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: Static code analysis se null check enforce karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Safer code without NullReferenceExceptions -->
+    <!-- [VARIATIONS TO TRY]: Nullable disable kar sakte hain legacy C# ke liye -->
+    <Nullable>enable</Nullable>
+    
+    <!-- [KYA KARTA HAI]: Implicit global usings enable karta hai -->
+    <!-- [KYU ZAROORI HAI]: Code readability aur cleanliness badhane ke liye -->
+    <!-- [KAISE CHALTA HAI]: Standard system namespaces automatically import hote hain -->
+    <!-- [OUTPUT / SIDE EFFECT]: Less boilerplate using directives -->
+    <!-- [VARIATIONS TO TRY]: Manually specify usings -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- [KYA KARTA HAI]: Unsafe code execution allow karta hai -->
+    <!-- [KYU ZAROORI HAI]: MemoryMarshal, pointers aur direct unmanaged memory casting ke liye zaroori hai -->
+    <!-- [KAISE CHALTA HAI]: Compiler unsafe blocks compile hone deta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Direct hardware memory access -->
+    <!-- [VARIATIONS TO TRY]: Safe Memory<T> API only use karein without unsafe keyword -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+</Project>

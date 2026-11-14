@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- [KYA KARTA HAI]: Console application target output type define karta hai -->
+    <!-- [KYU ZAROORI HAI]: Post-Quantum cryptography engine benchmark ko standalone run karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: OutputType Exe se runnable binary generate hoti hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Runnable executable application create hoti hai -->
+    <!-- [VARIATIONS TO TRY]: Class library for embedding in ledger audit services -->
+    <OutputType>Exe</OutputType>
+    
+    <!-- [KYA KARTA HAI]: Modern .NET 10.0 framework target karta hai -->
+    <!-- [KYU ZAROORI HAI]: Vectorized SIMD polynomial operations aur latest crypto primitives ke liye -->
+    <!-- [KAISE CHALTA HAI]: Roslyn compiler .NET 10 IL generate karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: High-efficiency runtime execution -->
+    <!-- [VARIATIONS TO TRY]: net8.0 ya net9.0 target karein -->
+    <TargetFramework>net10.0</TargetFramework>
+    
+    <!-- [KYA KARTA HAI]: Nullable static code analysis enable karta hai -->
+    <!-- [KYU ZAROORI HAI]: Cryptographic operations me null pointer exceptions eliminate karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: Static compiler analysis validates null safety -->
+    <!-- [OUTPUT / SIDE EFFECT]: Robust crash-free crypto code -->
+    <!-- [VARIATIONS TO TRY]: Nullable disable -->
+    <Nullable>enable</Nullable>
+    
+    <!-- [KYA KARTA HAI]: Global implicit using directives allow karta hai -->
+    <!-- [KYU ZAROORI HAI]: Boilerplate using directives reduce karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: System, System.Security.Cryptography namespaces automatically import hote hain -->
+    <!-- [OUTPUT / SIDE EFFECT]: Clean source code -->
+    <!-- [VARIATIONS TO TRY]: Explicit usings -->
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>
