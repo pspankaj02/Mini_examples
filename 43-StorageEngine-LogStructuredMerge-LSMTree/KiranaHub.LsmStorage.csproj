@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- [KYA KARTA HAI]: Executable binary console application target format define karta hai. -->
+    <!-- [KYU ZAROORI HAI]: LSM Storage Engine ko independent runnable micro-database server ki tarah run karne ke liye. -->
+    <!-- [KAISE CHALTA HAI]: Roslyn compiler ise Windows PE/ELF executable banata hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: KiranaHub.LsmStorage.exe generate hota hai. -->
+    <!-- [VARIATIONS TO TRY]: Standalone library banane ke liye OutputType ko ClassLibrary kar sakte hain. -->
+    <OutputType>Exe</OutputType>
+
+    <!-- [KYA KARTA HAI]: Target framework .NET 10.0 specify karta hai. -->
+    <!-- [KYU ZAROORI HAI]: Modern Span<T>, Memory<T>, high-performance file streams, aur hardware-accelerated bit operations ke liye. -->
+    <!-- [KAISE CHALTA HAI]: Modern CoreCLR runtime target karta hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: Net10.0 BCL APIs activate hoti hain. -->
+    <!-- [VARIATIONS TO TRY]: net8.0 ya net9.0 par bhi execute kiya ja sakta hai. -->
+    <TargetFramework>net10.0</TargetFramework>
+
+    <!-- [KYA KARTA HAI]: Implicit global usings enable karta hai. -->
+    <!-- [KYU ZAROORI HAI]: Har file me System, System.IO, System.Text bar-bar import karne ka boilerplate khatam hota hai. -->
+    <!-- [KAISE CHALTA HAI]: Compiler implicitly standard namespaces inject karta hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: Cleaner C# source code. -->
+    <!-- [VARIATIONS TO TRY]: Disable karke explicit namespaces add kar sakte hain. -->
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- [KYA KARTA HAI]: Nullable reference types strict mode enable karta hai. -->
+    <!-- [KYU ZAROORI HAI]: Storage engine me null reference bugs aur corrupt disk pointers prevent karne ke liye. -->
+    <!-- [KAISE CHALTA HAI]: Compile-time null-safety warnings produce karta hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: Zero NullReferenceExceptions in production. -->
+    <!-- [VARIATIONS TO TRY]: WarningsAsErrors true karke absolute null-safety enforce kar sakte hain. -->
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

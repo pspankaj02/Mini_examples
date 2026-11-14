@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- [KYA KARTA HAI]: Executable binary console application target format define karta hai. -->
+    <!-- [KYU ZAROORI HAI]: Multi-Agent Swarm Orchestrator ko autonomous daemon/service ki tarah run karne ke liye. -->
+    <!-- [KAISE CHALTA HAI]: Roslyn compiler ise PE/ELF executable banata hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: KiranaHub.AgentSwarm.exe generate hota hai. -->
+    <!-- [VARIATIONS TO TRY]: Worker service ya Docker container microservice. -->
+    <OutputType>Exe</OutputType>
+
+    <!-- [KYA KARTA HAI]: Target framework .NET 10.0 specify karta hai. -->
+    <!-- [KYU ZAROORI HAI]: Modern Threading Channels, async streams, Task.WhenAll, aur lock-free primitives ke liye. -->
+    <!-- [KAISE CHALTA HAI]: Modern CoreCLR runtime target karta hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: Net10.0 BCL APIs activate hoti hain. -->
+    <!-- [VARIATIONS TO TRY]: net8.0 ya net9.0 par bhi execute ho sakta hai. -->
+    <TargetFramework>net10.0</TargetFramework>
+
+    <!-- [KYA KARTA HAI]: Implicit global usings enable karta hai. -->
+    <!-- [KYU ZAROORI HAI]: System, System.Collections.Concurrent, System.Threading bar-bar import karne se bachata hai. -->
+    <!-- [KAISE CHALTA HAI]: Compiler implicitly standard namespaces inject karta hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: Cleaner C# source code. -->
+    <!-- [VARIATIONS TO TRY]: Disable karke explicit imports likh sakte hain. -->
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- [KYA KARTA HAI]: Nullable reference types strict mode enable karta hai. -->
+    <!-- [KYU ZAROORI HAI]: Multi-agent blackboard me uninitialized message payloads ya null bids prevent karne ke liye. -->
+    <!-- [KAISE CHALTA HAI]: Compile-time null-safety warnings produce karta hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: High reliability in concurrent multi-agent coordination. -->
+    <!-- [VARIATIONS TO TRY]: WarningsAsErrors true for bulletproof contracts. -->
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

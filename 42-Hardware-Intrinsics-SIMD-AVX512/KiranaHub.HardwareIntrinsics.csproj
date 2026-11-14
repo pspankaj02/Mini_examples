@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- [KYA KARTA HAI]: Console application executable target define karta hai -->
+    <!-- [KYU ZAROORI HAI]: SIMD hardware intrinsics benchmark ko standalone execute karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: OutputType Exe se runnable OS binary generate hoti hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Runnable executable application create hoti hai -->
+    <!-- [VARIATIONS TO TRY]: Class library me compile karke pricing engine service me embed karein -->
+    <OutputType>Exe</OutputType>
+    
+    <!-- [KYA KARTA HAI]: Modern .NET 10.0 target framework define karta hai -->
+    <!-- [KYU ZAROORI HAI]: Latest Vector256, Vector512 aur hardware intrinsics APIs use karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: Roslyn compiler .NET 10 JIT intrinsics enable karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Direct CPU instruction mapping (AVX2, AVX-512, FMA) -->
+    <!-- [VARIATIONS TO TRY]: net8.0 ya net9.0 target karein -->
+    <TargetFramework>net10.0</TargetFramework>
+    
+    <!-- [KYA KARTA HAI]: Nullable reference types static analysis enable karta hai -->
+    <!-- [KYU ZAROORI HAI]: NullReferenceExceptions compile-time par prevent karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: Static compiler analysis potential null pointers warn karta hai -->
+    <!-- [OUTPUT / SIDE EFFECT]: Robust crash-free vectorized execution -->
+    <!-- [VARIATIONS TO TRY]: Nullable disable -->
+    <Nullable>enable</Nullable>
+    
+    <!-- [KYA KARTA HAI]: Global implicit using directives allow karta hai -->
+    <!-- [KYU ZAROORI HAI]: Standard framework namespaces boilerplate reduce karne ke liye -->
+    <!-- [KAISE CHALTA HAI]: System namespaces automatically import ho jaate hain -->
+    <!-- [OUTPUT / SIDE EFFECT]: Clean source code -->
+    <!-- [VARIATIONS TO TRY]: Explicit usings -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    
+    <!-- [KYA KARTA HAI]: Unsafe code blocks allow karta hai -->
+    <!-- [KYU ZAROORI HAI]: SIMD pointer-aligned memory loads and stores ke liye -->
+    <!-- [KAISE CHALTA HAI]: Compiler allows unsafe keyword in structs and methods -->
+    <!-- [OUTPUT / SIDE EFFECT]: Unmanaged memory pointer access enabled -->
+    <!-- [VARIATIONS TO TRY]: Safe Span-only SIMD APIs -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+</Project>

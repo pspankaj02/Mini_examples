@@ -101,4 +101,19 @@
   <Folder Name="/41-PostQuantum-Cryptography-ZeroTrust/">
     <Project Path="41-PostQuantum-Cryptography-ZeroTrust/KiranaHub.PostQuantumCrypto.csproj" />
   </Folder>
+  <Folder Name="/42-Hardware-Intrinsics-SIMD-AVX512/">
+    <Project Path="42-Hardware-Intrinsics-SIMD-AVX512/KiranaHub.HardwareIntrinsics.csproj" />
+  </Folder>
+  <Folder Name="/43-StorageEngine-LogStructuredMerge-LSMTree/">
+    <Project Path="43-StorageEngine-LogStructuredMerge-LSMTree/KiranaHub.LsmStorage.csproj" />
+  </Folder>
+  <Folder Name="/44-ZeroKnowledge-Proofs-zkSNARKs-Privacy/">
+    <Project Path="44-ZeroKnowledge-Proofs-zkSNARKs-Privacy/KiranaHub.ZkSnarks.csproj" />
+  </Folder>
+  <Folder Name="/45-Autonomous-AI-MultiAgent-Swarm-Orchestrator/">
+    <Project Path="45-Autonomous-AI-MultiAgent-Swarm-Orchestrator/KiranaHub.AgentSwarm.csproj" />
+  </Folder>
+  <Folder Name="/46-GPU-Compute-And-MassiveParallel-Matrix/">
+    <Project Path="46-GPU-Compute-And-MassiveParallel-Matrix/KiranaHub.GpuMatrixCompute.csproj" />
+  </Folder>
 </Solution>

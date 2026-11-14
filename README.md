@@ -182,9 +182,20 @@ flowchart TD
 
 ---
 
+### **Level 10: Hardware SIMD, LSM Storage, zk-SNARKs, Autonomous Swarms & Massively Parallel Matrix Compute**
+| # | Project Name | Key Topics Covered | Study Guide |
+|---|---|---|---|
+| **42** | [`42-Hardware-Intrinsics-SIMD-AVX512`](file:///d:/ToLearn_Antigravity/42-Hardware-Intrinsics-SIMD-AVX512) | AVX2/AVX-512 `Vector256<float>` intrinsics, FMA fused multiply-add, Vectorized catalog pricing & tax matrix, Vectorized Haversine distance engine (2.5x - 4x speedup) | [README.md](file:///d:/ToLearn_Antigravity/42-Hardware-Intrinsics-SIMD-AVX512/README.md) |
+| **43** | [`43-StorageEngine-LogStructuredMerge-LSMTree`](file:///d:/ToLearn_Antigravity/43-StorageEngine-LogStructuredMerge-LSMTree) | Log-Structured Merge-Tree (LSM), Append-only WAL with CRC32, In-memory sorted MemTable, Immutable SSTables with Sparse Index & Bloom Filters, K-way merge compaction | [README.md](file:///d:/ToLearn_Antigravity/43-StorageEngine-LogStructuredMerge-LSMTree/README.md) |
+| **44** | [`44-ZeroKnowledge-Proofs-zkSNARKs-Privacy`](file:///d:/ToLearn_Antigravity/44-ZeroKnowledge-Proofs-zkSNARKs-Privacy) | R1CS constraint circuits ($\langle A,s \rangle \times \langle B,s \rangle = \langle C,s \rangle$), Finite field $\mathbb{F}_p$, 8-bit decomposition range proof (Age $\ge 21$), Sub-millisecond non-interactive zk-SNARK verification | [README.md](file:///d:/ToLearn_Antigravity/44-ZeroKnowledge-Proofs-zkSNARKs-Privacy/README.md) |
+| **45** | [`45-Autonomous-AI-MultiAgent-Swarm-Orchestrator`](file:///d:/ToLearn_Antigravity/45-Autonomous-AI-MultiAgent-Swarm-Orchestrator) | Decentralized Multi-Agent Swarm, Thread-safe Blackboard Bus, FIPA Contract Net Protocol (CNP) bidding, Dynamic perishable markdown curves, Autonomous self-healing logistics | [README.md](file:///d:/ToLearn_Antigravity/45-Autonomous-AI-MultiAgent-Swarm-Orchestrator/README.md) |
+| **46** | [`46-GPU-Compute-And-MassiveParallel-Matrix`](file:///d:/ToLearn_Antigravity/46-GPU-Compute-And-MassiveParallel-Matrix) | GPU-inspired SIMT 2D block grid scheduling, Shared local cache tiling ($16 \times 16$), Collaborative filtering matrix dot products ($U \times V^T$), Real-time Top-5 recommendation ranker | [README.md](file:///d:/ToLearn_Antigravity/46-GPU-Compute-And-MassiveParallel-Matrix/README.md) |
+
+---
+
 ## 🚀 How to Build the Master Solution
 
-1. **Build all 34 .NET Projects (Levels 1 through 9)**:
+1. **Build all 39 .NET Projects (Levels 1 through 10)**:
    ```bash
    dotnet build KiranaHub.slnx --no-restore
    ```
@@ -215,5 +226,10 @@ flowchart TD
    - `39-WasmSandbox`: `dotnet run --project 39-WebAssembly-Wasm-Plugin-Sandbox/KiranaHub.WasmSandbox.csproj`
    - `40-RaftConsensus`: `dotnet run --project 40-DistributedConsensus-Raft-Protocol/KiranaHub.RaftConsensus.csproj`
    - `41-PostQuantumCrypto`: `dotnet run --project 41-PostQuantum-Cryptography-ZeroTrust/KiranaHub.PostQuantumCrypto.csproj`
+   - `42-HardwareIntrinsics`: `dotnet run --project 42-Hardware-Intrinsics-SIMD-AVX512/KiranaHub.HardwareIntrinsics.csproj`
+   - `43-LsmStorage`: `dotnet run --project 43-StorageEngine-LogStructuredMerge-LSMTree/KiranaHub.LsmStorage.csproj`
+   - `44-ZkSnarks`: `dotnet run --project 44-ZeroKnowledge-Proofs-zkSNARKs-Privacy/KiranaHub.ZkSnarks.csproj`
+   - `45-AgentSwarm`: `dotnet run --project 45-Autonomous-AI-MultiAgent-Swarm-Orchestrator/KiranaHub.AgentSwarm.csproj`
+   - `46-GpuMatrixCompute`: `dotnet run --project 46-GPU-Compute-And-MassiveParallel-Matrix/KiranaHub.GpuMatrixCompute.csproj`
 
 

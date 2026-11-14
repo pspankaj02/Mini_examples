@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- [KYA KARTA HAI]: Executable binary console application target format define karta hai. -->
+    <!-- [KYU ZAROORI HAI]: zk-SNARKs Privacy Engine ko standalone runnable verification service ki tarah execute karne ke liye. -->
+    <!-- [KAISE CHALTA HAI]: Roslyn compiler ise PE/ELF executable banata hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: KiranaHub.ZkSnarks.exe generate hota hai. -->
+    <!-- [VARIATIONS TO TRY]: ClassLibrary target format for NuGet package distribution. -->
+    <OutputType>Exe</OutputType>
+
+    <!-- [KYA KARTA HAI]: Target framework .NET 10.0 specify karta hai. -->
+    <!-- [KYU ZAROORI HAI]: Modern 64-bit integer intrinsics, BigInteger arithmetic, aur zero-allocation spans ke liye. -->
+    <!-- [KAISE CHALTA HAI]: Modern CoreCLR runtime target karta hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: Net10.0 BCL APIs activate hoti hain. -->
+    <!-- [VARIATIONS TO TRY]: net8.0 ya net9.0 par bhi compile kiya ja sakta hai. -->
+    <TargetFramework>net10.0</TargetFramework>
+
+    <!-- [KYA KARTA HAI]: Implicit global usings enable karta hai. -->
+    <!-- [KYU ZAROORI HAI]: System, System.Numerics bar-bar import karne ka boilerplate khatam hota hai. -->
+    <!-- [KAISE CHALTA HAI]: Compiler implicitly standard namespaces inject karta hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: Cleaner C# source code. -->
+    <!-- [VARIATIONS TO TRY]: Disable karke explicit namespaces add kar sakte hain. -->
+    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- [KYA KARTA HAI]: Nullable reference types strict mode enable karta hai. -->
+    <!-- [KYU ZAROORI HAI]: Cryptographic code me null dereference aur uninitialized witness vectors prevent karne ke liye. -->
+    <!-- [KAISE CHALTA HAI]: Compile-time null-safety warnings produce karta hai. -->
+    <!-- [OUTPUT / SIDE EFFECT]: Guaranteed null-safety during circuit constraint synthesis. -->
+    <!-- [VARIATIONS TO TRY]: WarningsAsErrors true for zero-defect security posture. -->
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>
